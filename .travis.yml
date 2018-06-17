@@ -10,7 +10,7 @@ jobs:
     - jdk: openjdk8
     - stage: Test Coverage
       jdk: oraclejdk8
-      after_success: mvn clean test jacoco:report coveralls:report
+      script: mvn clean test jacoco:report coveralls:report
     - stage: Deploy Artifacts
       if: tag IS present
       jdk: oraclejdk8
