@@ -6,7 +6,7 @@
 
     <groupId>com.singingbush</groupId>
     <artifactId>dub-client</artifactId>
-    <version>0.2.0-SNAPSHOT</version>
+    <version>0.2.0</version>
 
     <name>DUB Client</name>
     <description>Conveniently call the REST API on code.dlang.org and other DUB repositories</description>
