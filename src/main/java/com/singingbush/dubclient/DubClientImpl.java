@@ -2,9 +2,11 @@ package com.singingbush.dubclient;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.singingbush.dubclient.data.ErrorMessage;
 import com.singingbush.dubclient.data.PackageInfo;
 import com.singingbush.dubclient.data.PackageStats;
 import com.singingbush.dubclient.data.SearchResult;
+import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
@@ -106,9 +108,10 @@ class DubClientImpl implements DubClient {
             if(response != null) {
                 final int status = response.getStatusLine().getStatusCode();
                 if(status == 200) {
-                    return gson.fromJson(EntityUtils.toString(response.getEntity(), Charset.forName("UTF-8")), clazz);
+                    return parseResponse(response, clazz);
                 } else {
                     log.warn(String.format("DUB repository returned %s", status));
+                    log.debug("Server status message: {}", parseResponse(response, ErrorMessage.class).getStatusMessage());
                 }
             } else {
                 log.warn("no response from DUB repository");
@@ -118,6 +121,10 @@ class DubClientImpl implements DubClient {
         }
 
         throw new DubRepositoryException("");
+    }
+
+    private <T> T parseResponse(HttpResponse response, Class<T> clazz) throws IOException {
+        return gson.fromJson(EntityUtils.toString(response.getEntity(), Charset.forName("UTF-8")), clazz);
     }
 
     @Override
