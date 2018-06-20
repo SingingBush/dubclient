@@ -8,10 +8,10 @@ import java.util.Objects;
  */
 public class RepoStats {
 
-    private Integer stars;
-    private Integer watchers;
-    private Integer forks;
-    private Integer issues;
+    private final Integer stars;
+    private final Integer watchers;
+    private final Integer forks;
+    private final Integer issues;
 
     public RepoStats(Integer stars, Integer watchers, Integer forks, Integer issues) {
         this.stars = stars;
@@ -40,7 +40,7 @@ public class RepoStats {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        RepoStats repoStats = (RepoStats) o;
+        final RepoStats repoStats = (RepoStats) o;
         return Objects.equals(stars, repoStats.stars) &&
             Objects.equals(watchers, repoStats.watchers) &&
             Objects.equals(forks, repoStats.forks) &&

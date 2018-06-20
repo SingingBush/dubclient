@@ -8,15 +8,15 @@ import java.util.Objects;
  */
 public class Version {
 
-    private String name;
-    private String version;
-    private String description;
-    private String license;
-    private String readme;
-    private String commitID;
-    private String targetType;
-    private String date;
-    private String homepage;
+    private final String name;
+    private final String version;
+    private final String description;
+    private final String license;
+    private final String readme;
+    private final String commitID;
+    private final String targetType;
+    private final String date;
+    private final String homepage;
 
     public Version(String name, String version, String description, String license, String readme, String commitID, String targetType, String date, String homepage) {
         this.name = name;
@@ -70,7 +70,7 @@ public class Version {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Version version1 = (Version) o;
+        final Version version1 = (Version) o;
         return Objects.equals(name, version1.name) &&
             Objects.equals(version, version1.version) &&
             Objects.equals(description, version1.description) &&

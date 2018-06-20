@@ -2,13 +2,11 @@ package it;
 
 import com.singingbush.dubclient.DubClient;
 import com.singingbush.dubclient.DubRepositoryException;
-import com.singingbush.dubclient.data.DownloadStats;
-import com.singingbush.dubclient.data.PackageInfo;
-import com.singingbush.dubclient.data.PackageStats;
-import com.singingbush.dubclient.data.RepoStats;
+import com.singingbush.dubclient.data.*;
 import org.junit.Test;
 
 import java.time.LocalDateTime;
+import java.util.stream.Stream;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -29,6 +27,15 @@ public class DubClientIT {
         assertTrue(dunit.split("\\.").length > 1);
 
         client.latestVersion("dunit");
+    }
+
+    @Test
+    public void testSearch() throws DubRepositoryException {
+        final DubClient client = DubClient.builder().build();
+
+        final Stream<SearchResult> results = client.search("unit");
+
+        assertTrue(results.allMatch(sr -> !sr.getName().isEmpty() && !sr.getDescription().isEmpty() && !sr.getVersion().isEmpty()));
     }
 
     @Test

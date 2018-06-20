@@ -8,10 +8,10 @@ import java.util.Objects;
  */
 public class DownloadStats {
 
-    private Integer total;
-    private Integer monthly;
-    private Integer weekly;
-    private Integer daily;
+    private final Integer total;
+    private final Integer monthly;
+    private final Integer weekly;
+    private final Integer daily;
 
     public DownloadStats(Integer total, Integer monthly, Integer weekly, Integer daily) {
         this.total = total;
@@ -40,7 +40,7 @@ public class DownloadStats {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        DownloadStats that = (DownloadStats) o;
+        final DownloadStats that = (DownloadStats) o;
         return Objects.equals(total, that.total) &&
             Objects.equals(monthly, that.monthly) &&
             Objects.equals(weekly, that.weekly) &&

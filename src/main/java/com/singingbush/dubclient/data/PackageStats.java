@@ -8,10 +8,10 @@ import java.util.Objects;
  */
 public class PackageStats {
 
-    private DownloadStats downloads;
-    private RepoStats repo;
-    private String updatedAt;
-    private Double score;
+    private final DownloadStats downloads;
+    private final RepoStats repo;
+    private final String updatedAt;
+    private final Double score;
 
     public PackageStats(DownloadStats downloads, RepoStats repo, String updatedAt, Double score) {
         this.downloads = downloads;
@@ -40,7 +40,7 @@ public class PackageStats {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        PackageStats stats = (PackageStats) o;
+        final PackageStats stats = (PackageStats) o;
         return Objects.equals(downloads, stats.downloads) &&
             Objects.equals(repo, stats.repo) &&
             Objects.equals(updatedAt, stats.updatedAt) &&

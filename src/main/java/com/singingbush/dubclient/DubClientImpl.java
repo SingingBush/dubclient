@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.singingbush.dubclient.data.PackageInfo;
 import com.singingbush.dubclient.data.PackageStats;
+import com.singingbush.dubclient.data.SearchResult;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
@@ -17,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Stream;
 
 /**
  * @author Samael Bate (singingbush)
@@ -43,7 +45,17 @@ class DubClientImpl implements DubClient {
         gson = new GsonBuilder().create();
     }
 
-    public PackageInfo packageInfo(String packageName) throws DubRepositoryException {
+    @Override
+    public Stream<SearchResult> search(@NotNull final String text) throws DubRepositoryException {
+        if (text.isEmpty()) throw new IllegalArgumentException("Search text cannot be blank");
+
+        final HttpUriRequest request = new HttpGet(String.format("%s/api/packages/search?q=%s", repositoryUrl, text));
+
+        return Stream.of(callApi(request, SearchResult[].class));
+    }
+
+    @Override
+    public PackageInfo packageInfo(@NotNull final String packageName) throws DubRepositoryException {
         if (packageName.isEmpty()) throw new IllegalArgumentException("Package Name cannot be blank");
 
         final HttpUriRequest request = new HttpGet(String.format("%s/api/packages/%s/info", repositoryUrl, packageName));
@@ -51,7 +63,17 @@ class DubClientImpl implements DubClient {
         return callApi(request, PackageInfo.class);
     }
 
-    public PackageStats packageStats(String packageName) throws DubRepositoryException {
+    @Override
+    public PackageInfo packageInfo(@NotNull final String packageName, @NotNull final String version) throws DubRepositoryException {
+        if (packageName.isEmpty() || version.isEmpty()) throw new IllegalArgumentException("args cannot be blank");
+
+        final HttpUriRequest request = new HttpGet(String.format("%s/api/packages/%s/%s/info", repositoryUrl, packageName, version));
+
+        return callApi(request, PackageInfo.class);
+    }
+
+    @Override
+    public PackageStats packageStats(@NotNull final String packageName) throws DubRepositoryException {
         if (packageName.isEmpty()) throw new IllegalArgumentException("Package Name cannot be blank");
 
         final HttpUriRequest request = new HttpGet(String.format("%s/api/packages/%s/stats", repositoryUrl, packageName));
@@ -59,7 +81,17 @@ class DubClientImpl implements DubClient {
         return callApi(request, PackageStats.class);
     }
 
-    public String latestVersion(String packageName) throws DubRepositoryException {
+    @Override
+    public PackageStats packageStats(@NotNull final String packageName, @NotNull final String version) throws DubRepositoryException {
+        if (packageName.isEmpty() || version.isEmpty()) throw new IllegalArgumentException("args cannot be blank");
+
+        final HttpUriRequest request = new HttpGet(String.format("%s/api/packages/%s/%s/stats", repositoryUrl, packageName, version));
+
+        return callApi(request, PackageStats.class);
+    }
+
+    @Override
+    public String latestVersion(@NotNull final String packageName) throws DubRepositoryException {
         if (packageName.isEmpty()) throw new IllegalArgumentException("Package Name cannot be blank");
 
         final HttpUriRequest request = new HttpGet(String.format("%s/api/packages/%s/latest", repositoryUrl, packageName));

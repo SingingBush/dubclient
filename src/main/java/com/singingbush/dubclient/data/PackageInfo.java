@@ -13,14 +13,14 @@ import java.util.Set;
  */
 public class PackageInfo {
 
-    private Repository repository;
-    private String dateAdded;
-    private String name;
-    private List<String> categories;
-    private String owner;
-    private String id;
-    private String documentationURL;
-    private Set<Version> versions;
+    private final Repository repository;
+    private final String dateAdded;
+    private final String name;
+    private final List<String> categories;
+    private final String owner;
+    private final String id;
+    private final String documentationURL;
+    private final Set<Version> versions;
 
     public PackageInfo(Repository repository, String dateAdded, String name, List<String> categories, String owner, String id, String documentationURL, Set<Version> versions) {
         this.repository = repository;

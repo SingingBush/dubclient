@@ -8,9 +8,9 @@ import java.util.Objects;
  */
 public class Repository {
 
-    private String project;
-    private String owner;
-    private String kind;
+    private final String project;
+    private final String owner;
+    private final String kind;
 
     public Repository(String project, String owner, String kind) {
         this.project = project;
@@ -34,7 +34,7 @@ public class Repository {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Repository that = (Repository) o;
+        final Repository that = (Repository) o;
         return Objects.equals(project, that.project) &&
             Objects.equals(owner, that.owner) &&
             Objects.equals(kind, that.kind);
