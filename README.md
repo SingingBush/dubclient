@@ -1,6 +1,11 @@
 DUB Client
 ==========
 
+[![Build Status](https://travis-ci.org/SingingBush/dubclient.svg?branch=master)](https://travis-ci.org/SingingBush/dubclient)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.singingbush/dub-client/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.singingbush/dub-client)
+[![Javadocs](https://www.javadoc.io/badge/com.singingbush/dub-client.svg)](https://www.javadoc.io/doc/com.singingbush/dub-client)
+[![Coverage Status](https://coveralls.io/repos/github/SingingBush/dubclient/badge.svg?branch=master)](https://coveralls.io/github/SingingBush/dubclient?branch=master)
+
 Stand-alone library to provide convenient access to the REST API of a dub repository. Deserializes the json from the API for convenient use within a JVM language such as Java or Kotlin.
 
 `https://code.dlang.org/api/packages/search?q=`
