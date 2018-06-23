@@ -8,15 +8,9 @@ import java.util.Objects;
  */
 public class Repository {
 
-    private final String project;
-    private final String owner;
-    private final String kind;
-
-    public Repository(String project, String owner, String kind) {
-        this.project = project;
-        this.owner = owner;
-        this.kind = kind;
-    }
+    private String project;
+    private String owner;
+    private String kind;
 
     public String getProject() {
         return project;

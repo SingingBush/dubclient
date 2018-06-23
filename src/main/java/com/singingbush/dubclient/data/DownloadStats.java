@@ -8,17 +8,10 @@ import java.util.Objects;
  */
 public class DownloadStats {
 
-    private final Integer total;
-    private final Integer monthly;
-    private final Integer weekly;
-    private final Integer daily;
-
-    public DownloadStats(Integer total, Integer monthly, Integer weekly, Integer daily) {
-        this.total = total;
-        this.monthly = monthly;
-        this.weekly = weekly;
-        this.daily = daily;
-    }
+    private Integer total;
+    private Integer monthly;
+    private Integer weekly;
+    private Integer daily;
 
     public Integer getTotal() {
         return total;

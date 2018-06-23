@@ -8,17 +8,10 @@ import java.util.Objects;
  */
 public class RepoStats {
 
-    private final Integer stars;
-    private final Integer watchers;
-    private final Integer forks;
-    private final Integer issues;
-
-    public RepoStats(Integer stars, Integer watchers, Integer forks, Integer issues) {
-        this.stars = stars;
-        this.watchers = watchers;
-        this.forks = forks;
-        this.issues = issues;
-    }
+    private Integer stars;
+    private Integer watchers;
+    private Integer forks;
+    private Integer issues;
 
     public Integer getStars() {
         return stars;

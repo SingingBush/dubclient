@@ -8,13 +8,8 @@ import java.util.Objects;
  */
 public class ErrorMessage {
 
-    private final String statusMessage;
-    private final String statusDebugMessage;
-
-    public ErrorMessage(String statusMessage, String statusDebugMessage) {
-        this.statusMessage = statusMessage;
-        this.statusDebugMessage = statusDebugMessage;
-    }
+    private String statusMessage;
+    private String statusDebugMessage;
 
     public String getStatusMessage() {
         return statusMessage;

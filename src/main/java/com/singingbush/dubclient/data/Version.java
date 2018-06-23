@@ -9,31 +9,17 @@ import java.util.Objects;
  */
 public class Version {
 
-    private final String name;
-    private final String version;
-    private final String description;
-    private final String license;
-    private final String readme;
-    private final String commitID;
-    private final String targetType;
-    private final String date;
-    private final String homepage;
-    private final String packageDescriptionFile;
-    private final String[] authors;
-
-    public Version(String name, String version, String description, String license, String readme, String commitID, String targetType, String date, String homepage, String packageDescriptionFile, String[] authors) {
-        this.name = name;
-        this.version = version;
-        this.description = description;
-        this.license = license;
-        this.readme = readme;
-        this.commitID = commitID;
-        this.targetType = targetType;
-        this.date = date;
-        this.homepage = homepage;
-        this.packageDescriptionFile = packageDescriptionFile;
-        this.authors = authors;
-    }
+    private String name;
+    private String version;
+    private String description;
+    private String license;
+    private String readme;
+    private String commitID;
+    private String targetType;
+    private String date;
+    private String homepage;
+    private String packageDescriptionFile;
+    private String[] authors;
 
     public String getName() {
         return name;

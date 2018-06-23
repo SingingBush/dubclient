@@ -12,23 +12,13 @@ import java.util.Objects;
  */
 public class VersionInfo {
 
-    private final String readme;
-    private final String commitID;
-    private final String version;
-    private final String docFolder; // may be empty String
-    private final Boolean readmeMarkdown;
-    private final String date; // ISO-8601
-    private final Info info;
-
-    public VersionInfo(String readme, String commitID, String version, String docFolder, Boolean readmeMarkdown, String date, final Info info) {
-        this.readme = readme;
-        this.commitID = commitID;
-        this.version = version;
-        this.docFolder = docFolder;
-        this.readmeMarkdown = readmeMarkdown;
-        this.date = date;
-        this.info = info;
-    }
+    private String readme;
+    private String commitID;
+    private String version;
+    private String docFolder; // may be empty String
+    private Boolean readmeMarkdown;
+    private String date; // ISO-8601
+    private Info info;
 
     public String getReadme() {
         return readme;
@@ -60,23 +50,13 @@ public class VersionInfo {
     }
 
     public class Info {
-        private final String packageDescriptionFile;
-        private final String[] authors;
-        private final String name;
-        private final String targetType;
-        private final String license;
-        private final String description;
-        private final String homepage;
-
-        public Info(String packageDescriptionFile, String[] authors, String name, String targetType, String license, String description, String homepage) {
-            this.packageDescriptionFile = packageDescriptionFile;
-            this.authors = authors;
-            this.name = name;
-            this.targetType = targetType;
-            this.license = license;
-            this.description = description;
-            this.homepage = homepage;
-        }
+        private String packageDescriptionFile;
+        private String[] authors;
+        private String name;
+        private String targetType;
+        private String license;
+        private String description;
+        private String homepage;
 
         public String getPackageDescriptionFile() {
             return packageDescriptionFile;

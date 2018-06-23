@@ -8,15 +8,9 @@ import java.util.Objects;
  */
 public class SearchResult {
 
-    private final String name;
-    private final String description;
-    private final String version;
-
-    public SearchResult(final String name, final String description, final String version) {
-        this.name = name;
-        this.description = description;
-        this.version = version;
-    }
+    private String name;
+    private String description;
+    private String version;
 
     public String getName() {
         return name;

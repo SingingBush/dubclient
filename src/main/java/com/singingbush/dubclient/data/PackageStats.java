@@ -8,17 +8,10 @@ import java.util.Objects;
  */
 public class PackageStats {
 
-    private final DownloadStats downloads;
-    private final RepoStats repo;
-    private final String updatedAt;
-    private final Double score;
-
-    public PackageStats(DownloadStats downloads, RepoStats repo, String updatedAt, Double score) {
-        this.downloads = downloads;
-        this.repo = repo;
-        this.updatedAt = updatedAt;
-        this.score = score;
-    }
+    private DownloadStats downloads;
+    private RepoStats repo;
+    private String updatedAt;
+    private Double score;
 
     public DownloadStats getDownloads() {
         return downloads;
