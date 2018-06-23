@@ -70,6 +70,7 @@ public class VersionInfo {
             return name;
         }
 
+        @Nullable
         public String getTargetType() {
             return targetType;
         }

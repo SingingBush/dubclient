@@ -1,5 +1,7 @@
 package com.singingbush.dubclient.data;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Objects;
 
 /**
@@ -12,14 +14,17 @@ public class Repository {
     private String owner;
     private String kind;
 
+    @NotNull
     public String getProject() {
         return project;
     }
 
+    @NotNull
     public String getOwner() {
         return owner;
     }
 
+    @NotNull
     public String getKind() {
         return kind;
     }

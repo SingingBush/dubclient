@@ -1,0 +1,427 @@
+[
+    {
+        "name": "unit-threaded",
+        "description": "Advanced multi-threaded unit testing framework with minimal to no boilerplate using built-in unittest blocks",
+        "version": "0.7.46"
+    },
+    {
+        "name": "dunit",
+        "description": "Advanced unit testing toolkit for the D programming language",
+        "version": "1.0.14"
+    },
+    {
+        "name": "dscanner",
+        "description": "Swiss-army knife for D source code",
+        "version": "0.5.7"
+    },
+    {
+        "name": "dpq2",
+        "description": "Medium-level binding to the PostgreSQL database",
+        "version": "1.0.0-rc.5"
+    },
+    {
+        "name": "fluent-asserts",
+        "description": "Fluent assertions done right",
+        "version": "0.11.4"
+    },
+    {
+        "name": "stalkd",
+        "description": "Library for interacting with the Beanstalk message queue.",
+        "version": "1.1.1"
+    },
+    {
+        "name": "dsfml",
+        "description": "DSFML binding for SFML-The Simple and Fast Multimedia Library",
+        "version": "2.1.1"
+    },
+    {
+        "name": "dplug",
+        "description": "A library for crafting native audio plugins as simply as possible.",
+        "version": "6.0.32"
+    },
+    {
+        "name": "mysql-lited",
+        "description": "Lightweight native MySQL/MariaDB driver",
+        "version": "0.4.2"
+    },
+    {
+        "name": "trial",
+        "description": "The extensible test runner for DLang",
+        "version": "0.7.0-alpha.9"
+    },
+    {
+        "name": "tsv-utils-dlang",
+        "description": "eBay's TSV utilities. Command line tools for large, tabular data files.",
+        "version": "1.1.20"
+    },
+    {
+        "name": "reggae",
+        "description": "A build system in D",
+        "version": "0.6.1"
+    },
+    {
+        "name": "cerealed",
+        "description": "Binary serialisation library for D",
+        "version": "0.6.9"
+    },
+    {
+        "name": "d-unit",
+        "description": "xUnit Testing Framework for D",
+        "version": "0.9.0"
+    },
+    {
+        "name": "tinyredis",
+        "description": "Redis driver for D.",
+        "version": "2.2.0"
+    },
+    {
+        "name": "proper-d",
+        "description": "A simple library for reading simple property files.",
+        "version": "0.0.2"
+    },
+    {
+        "name": "smtp",
+        "description": "Synchronous SMTP library for D language",
+        "version": "0.3.0"
+    },
+    {
+        "name": "luad",
+        "description": "High-level Lua interface",
+        "version": "~master"
+    },
+    {
+        "name": "quantities",
+        "description": "A library to work with quantities and units",
+        "version": "0.9.0"
+    },
+    {
+        "name": "tkd",
+        "description": "GUI toolkit for the D programming language based on Tcl/Tk",
+        "version": "1.1.10"
+    },
+    {
+        "name": "entitysysd",
+        "description": "Entity/Component System engine",
+        "version": "2.6.2"
+    },
+    {
+        "name": "dpq",
+        "description": "A postgresql (libpq, pq) library aiming to be simple to use",
+        "version": "0.9.3"
+    },
+    {
+        "name": "d-option",
+        "description": "Yet another Option/Maybe implementation in D",
+        "version": "0.0.7"
+    },
+    {
+        "name": "mqtt",
+        "description": "MQTT broker",
+        "version": "0.1.0"
+    },
+    {
+        "name": "endovena",
+        "description": "Simple D Dependency Injection Framework",
+        "version": "0.3.4"
+    },
+    {
+        "name": "units-d",
+        "description": "Units and Quantities of Measurement library for D.",
+        "version": "0.1.0"
+    },
+    {
+        "name": "specd",
+        "description": "Library for expressing specifications (for unit testing) in D.",
+        "version": "0.1.0"
+    },
+    {
+        "name": "feature-test-d",
+        "description": "A feature test framework for D applications or libraries that builds on unittest and does not need any external tools.",
+        "version": "1.0.4"
+    },
+    {
+        "name": "libhttp2",
+        "description": "An HTTP/2 implementation for D.",
+        "version": "0.2.8"
+    },
+    {
+        "name": "iopipe",
+        "description": "A modular io library in D.",
+        "version": "0.1.2"
+    },
+    {
+        "name": "jin-go",
+        "description": "Thread-pooled coroutines with lock-free staticaly typed communication channels",
+        "version": "1.0.5"
+    },
+    {
+        "name": "docopt",
+        "description": "docopt implementation in D",
+        "version": "0.6.1-b.6"
+    },
+    {
+        "name": "ffmpeg-d",
+        "description": "FFmpeg Bindings",
+        "version": "3.1.1"
+    },
+    {
+        "name": "tango",
+        "description": "A large general-purpose library. A port of the D1 Tango library.",
+        "version": "1.0.3+2.068"
+    },
+    {
+        "name": "orange",
+        "description": "Orange is a serialization library for the D programming language",
+        "version": "1.0.0"
+    },
+    {
+        "name": "kiss-rpc",
+        "description": "A refined core library for D programming language.",
+        "version": "0.0.7"
+    },
+    {
+        "name": "d_hdf5",
+        "description": "HDF5 bindings and wrappers for the D Programming Language.",
+        "version": "0.3.0"
+    },
+    {
+        "name": "dlang_koans",
+        "description": "A series of exercises to learn D Programming Language",
+        "version": "0.0.14"
+    },
+    {
+        "name": "dpp",
+        "description": "Include C/C++ headers directly in D files",
+        "version": "0.0.1"
+    },
+    {
+        "name": "dmocks-revived",
+        "description": "A mocking framework for the D programming language",
+        "version": "~master"
+    },
+    {
+        "name": "tanya",
+        "description": "@nogc library. Containers, networking, metaprogramming, memory management, utilities",
+        "version": "0.10.0"
+    },
+    {
+        "name": "aedi",
+        "description": "A dependency injection container",
+        "version": "0.5.0"
+    },
+    {
+        "name": "dtest",
+        "description": "Utility to generate main file for unit test registration and running with unit-threaded",
+        "version": "0.2.6"
+    },
+    {
+        "name": "covered",
+        "description": "Processes output of code coverage analysis",
+        "version": "1.0.0"
+    },
+    {
+        "name": "tested",
+        "description": "Unit test runner with structured JSON output of results and resource usage.",
+        "version": "0.9.4"
+    },
+    {
+        "name": "de_window",
+        "description": "Provides window and OpenGL context creation cross platform.",
+        "version": "0.1.3"
+    },
+    {
+        "name": "asn1",
+        "description": "ASN.1 encoding and decoding with support for BER, CER, and DER",
+        "version": "2.4.3"
+    },
+    {
+        "name": "dmocks",
+        "description": "A mocking framework for the D programming language",
+        "version": "2.0.2"
+    },
+    {
+        "name": "isitthere",
+        "description": "A tool that generates perfect hash sets",
+        "version": "0.2.9"
+    },
+    {
+        "name": "unencumbered",
+        "description": "Support for Cucumber to write step descriptions in D",
+        "version": "0.2.0"
+    },
+    {
+        "name": "sgio-d",
+        "description": "sgio library for Linux and Windows",
+        "version": "0.0.5"
+    },
+    {
+        "name": "daffodil",
+        "description": "D Imaging Library",
+        "version": "0.1.3"
+    },
+    {
+        "name": "hap",
+        "description": "A next-gen replacement for std.random that implements RNGs as reference types",
+        "version": "1.0.0-rc.2.1"
+    },
+    {
+        "name": "thrift-d",
+        "description": "D library for Apache Thrift RPC system",
+        "version": "0.1.1"
+    },
+    {
+        "name": "phobos-next",
+        "description": "Various reusable D code.",
+        "version": "0.2.0"
+    },
+    {
+        "name": "dusybox",
+        "description": "My own busybox",
+        "version": "0.2.1"
+    },
+    {
+        "name": "cryptonote",
+        "description": "D binding for cryptonote hash library (exposed by coinfoundry/miningcore)",
+        "version": "1.0.2"
+    },
+    {
+        "name": "snck",
+        "description": "progress display",
+        "version": "0.0.4"
+    },
+    {
+        "name": "xmlrpcc-d",
+        "description": "XML RPC client library for D Programming Language",
+        "version": "0.2.1"
+    },
+    {
+        "name": "polo",
+        "description": "Markov chains from the command line.",
+        "version": "1.0.0"
+    },
+    {
+        "name": "openweatherd",
+        "description": "A D library to work with weather information and forecast data provided by Open Weather Map.",
+        "version": "1.0.0"
+    },
+    {
+        "name": "cuda_d",
+        "description": "D bindings for CUDA",
+        "version": "0.1.0"
+    },
+    {
+        "name": "kameloso",
+        "description": "An IRC bot",
+        "version": "1.0.0-rc.1"
+    },
+    {
+        "name": "timer",
+        "description": "A simple countdown timer",
+        "version": "0.6.1"
+    },
+    {
+        "name": "unit-threaded-abscissa",
+        "description": "This is just a temporary fork of unit-threaded with pulls #41 and #42 included.",
+        "version": "0.0.1"
+    },
+    {
+        "name": "dolina",
+        "description": "Omron HostLink PLC communication library",
+        "version": "0.6.0"
+    },
+    {
+        "name": "lru_eviction_queue",
+        "description": "A LRU Eviction Queue for the D programming language",
+        "version": "1.7.0"
+    },
+    {
+        "name": "bdd",
+        "description": "Behavior Driven Development for the D programming language",
+        "version": "1.3.0"
+    },
+    {
+        "name": "consoleur",
+        "description": "Basic package for interaction with character-oriented (POSIX) terminal emulators",
+        "version": "0.3.0"
+    },
+    {
+        "name": "pegged-cutter",
+        "description": "Utility to remove unnessesary nodes from a PEG-generated parse tree",
+        "version": "1.0.2"
+    },
+    {
+        "name": "d-web-browser-history",
+        "description": "Get web browser history with the D programming language",
+        "version": "1.2.0"
+    },
+    {
+        "name": "d-glob",
+        "description": "Search file systems with glob patterns using the D programming language",
+        "version": "0.4.0"
+    },
+    {
+        "name": "multihash",
+        "description": "D binding for multihash library exposed by Oliver Weichhold for coinfoundry project",
+        "version": "1.0.2"
+    },
+    {
+        "name": "marsrestclient",
+        "description": "Simple REST client on D language",
+        "version": "0.3.0-alpha.1"
+    },
+    {
+        "name": "d-weather-forecast",
+        "description": "Get weather forecast with the D programming language",
+        "version": "1.3.0"
+    },
+    {
+        "name": "d-ipinfo",
+        "description": "Get http://ipinfo.io info with the D programming language",
+        "version": "1.1.0"
+    },
+    {
+        "name": "unofficial-derelict-sqlite3",
+        "description": "Dynamic bindings to the SQLite library for the D Programming Language",
+        "version": "0.2.0"
+    },
+    {
+        "name": "arith-eval",
+        "description": "A minimal math expression evaluation library.",
+        "version": "0.5.1"
+    },
+    {
+        "name": "lineml",
+        "description": "HTML-like markup language for the single line layouts.",
+        "version": "0.9.8"
+    },
+    {
+        "name": "metad",
+        "description": "MetaD compile time compiler.",
+        "version": "0.0.2"
+    },
+    {
+        "name": "dsrcgen",
+        "description": "The semantic code generation framework for Dlang",
+        "version": "0.1.0"
+    },
+    {
+        "name": "indexed-relation",
+        "description": "In-memory indexed relations",
+        "version": "0.0.1"
+    },
+    {
+        "name": "styx",
+        "description": "STYX programming language",
+        "version": "0.0.1-alpha.7"
+    },
+    {
+        "name": "sizes",
+        "description": "Basically core.time.Duration, but for byte sizes (file size)",
+        "version": "1.0.0"
+    },
+    {
+        "name": "d-nv",
+        "description": "NVRTC wrapper for D",
+        "version": "0.0.1"
+    }
+]

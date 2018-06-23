@@ -45,7 +45,7 @@ public class DubClientIT {
 
     @Test(timeout = 5_000L)
     public void testPackageInfo() throws DubRepositoryException {
-        final PackageInfo info = client.packageInfo("hibernated");
+        final PackageInfo info = client.packageInfo("vibe-d");
 
         assertNotNull(info);
 
@@ -54,10 +54,24 @@ public class DubClientIT {
         info.getVersions().parallelStream()
             .forEach(ReflectionTestUtils.Assert::assertAllGettersNotNull);
 
-        assertEquals("hibernated", info.getName());
-        assertEquals(OffsetDateTime.of(2013, 4, 17, 11, 37, 9, 0, ZoneOffset.UTC).toZonedDateTime(), info.getDateAdded());
-        assertEquals(ZonedDateTime.parse("2013-04-17T11:37:09Z"), info.getDateAdded());
+        assertEquals("vibe-d", info.getName());
+        assertEquals(OffsetDateTime.of(2013, 1, 17, 11, 52, 21, 0, ZoneOffset.UTC).toZonedDateTime(), info.getDateAdded());
+        assertEquals(ZonedDateTime.parse("2013-01-17T11:52:21Z"), info.getDateAdded());
     }
+
+//    @Test(timeout = 5_000L)
+//    public void testPackageInfoGitlab() throws DubRepositoryException {
+//        // ensure projects on Gitlab don't have any weird quirks
+//        final PackageInfo info = client.packageInfo("gitlab-test-package");
+//
+//        assertNotNull(info);
+//        assertAllGettersNotNull(info);
+//        assertAllGettersNotNull(info.getRepository());
+//        info.getVersions().parallelStream()
+//            .forEach(ReflectionTestUtils.Assert::assertAllGettersNotNull);
+//
+//        assertEquals("gitlab-test-package", info.getName());
+//    }
 
     @Test(timeout = 5_000L)
     public void testPackageVersionInfo() throws DubRepositoryException {

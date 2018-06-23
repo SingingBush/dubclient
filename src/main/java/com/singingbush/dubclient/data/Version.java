@@ -1,5 +1,7 @@
 package com.singingbush.dubclient.data;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -13,6 +15,7 @@ public class Version {
     private String version;
     private String description;
     private String license;
+    private String copyright;
     private String readme;
     private String commitID;
     private String targetType;
@@ -37,6 +40,11 @@ public class Version {
         return license;
     }
 
+    @Nullable
+    public String getCopyright() {
+        return copyright;
+    }
+
     public String getReadme() {
         return readme;
     }
@@ -45,6 +53,7 @@ public class Version {
         return commitID;
     }
 
+    @Nullable
     public String getTargetType() {
         return targetType;
     }
@@ -74,6 +83,7 @@ public class Version {
             Objects.equals(version, version1.version) &&
             Objects.equals(description, version1.description) &&
             Objects.equals(license, version1.license) &&
+            Objects.equals(copyright, version1.copyright) &&
             Objects.equals(readme, version1.readme) &&
             Objects.equals(commitID, version1.commitID) &&
             Objects.equals(targetType, version1.targetType) &&
@@ -85,7 +95,7 @@ public class Version {
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(name, version, description, license, readme, commitID, targetType, date, homepage, packageDescriptionFile);
+        int result = Objects.hash(name, version, description, license, copyright, readme, commitID, targetType, date, homepage, packageDescriptionFile);
         result = 31 * result + Arrays.hashCode(authors);
         return result;
     }
@@ -97,6 +107,7 @@ public class Version {
         sb.append(", version='").append(version).append('\'');
         sb.append(", description='").append(description).append('\'');
         sb.append(", license='").append(license).append('\'');
+        sb.append(", copyright='").append(copyright).append('\'');
         sb.append(", readme='").append(readme).append('\'');
         sb.append(", commitID='").append(commitID).append('\'');
         sb.append(", targetType='").append(targetType).append('\'');

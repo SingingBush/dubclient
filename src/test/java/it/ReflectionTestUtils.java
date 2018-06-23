@@ -49,7 +49,9 @@ public class ReflectionTestUtils {
 
             Arrays.stream(methods).forEach(m -> {
                 if(m.getParameterTypes().length == 0 && m.getName().startsWith("get")) {
-                    final String msg = message != null ? message : m.getName() + "() returned null";
+                    final String msg = message != null ? message :
+                        String.format("%s::%s() returned null", obj.getClass().getSimpleName(), m.getName());
+
                     try {
                         assertNotNull(msg, m.invoke(obj, null));
                     } catch (IllegalAccessException | InvocationTargetException e) {
