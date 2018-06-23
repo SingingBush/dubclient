@@ -2,9 +2,7 @@ package com.singingbush.dubclient.data;
 
 import org.jetbrains.annotations.Nullable;
 
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 /**
@@ -51,11 +49,7 @@ public class VersionInfo {
 
     @Nullable
     public ZonedDateTime getDate() {
-        if(date != null && !date.isEmpty()) {
-            // datetimes are generally ISO-8601 but may be missing timezone, default to UTC
-            return ZonedDateTime.parse(date, DateTimeFormatter.ISO_DATE_TIME.withZone(ZoneId.of("UTC")));
-        }
-        return null;
+        return Utils.parseDatetime(date);
     }
 
     @Override
