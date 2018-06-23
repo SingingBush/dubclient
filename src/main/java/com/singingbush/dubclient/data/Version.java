@@ -1,5 +1,6 @@
 package com.singingbush.dubclient.data;
 
+import java.util.Arrays;
 import java.util.Objects;
 
 /**
@@ -17,8 +18,10 @@ public class Version {
     private final String targetType;
     private final String date;
     private final String homepage;
+    private final String packageDescriptionFile;
+    private final String[] authors;
 
-    public Version(String name, String version, String description, String license, String readme, String commitID, String targetType, String date, String homepage) {
+    public Version(String name, String version, String description, String license, String readme, String commitID, String targetType, String date, String homepage, String packageDescriptionFile, String[] authors) {
         this.name = name;
         this.version = version;
         this.description = description;
@@ -28,6 +31,8 @@ public class Version {
         this.targetType = targetType;
         this.date = date;
         this.homepage = homepage;
+        this.packageDescriptionFile = packageDescriptionFile;
+        this.authors = authors;
     }
 
     public String getName() {
@@ -66,11 +71,19 @@ public class Version {
         return homepage;
     }
 
+    public String getPackageDescriptionFile() {
+        return packageDescriptionFile;
+    }
+
+    public String[] getAuthors() {
+        return authors;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        final Version version1 = (Version) o;
+        Version version1 = (Version) o;
         return Objects.equals(name, version1.name) &&
             Objects.equals(version, version1.version) &&
             Objects.equals(description, version1.description) &&
@@ -79,12 +92,16 @@ public class Version {
             Objects.equals(commitID, version1.commitID) &&
             Objects.equals(targetType, version1.targetType) &&
             Objects.equals(date, version1.date) &&
-            Objects.equals(homepage, version1.homepage);
+            Objects.equals(homepage, version1.homepage) &&
+            Objects.equals(packageDescriptionFile, version1.packageDescriptionFile) &&
+            Arrays.equals(authors, version1.authors);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, version, description, license, readme, commitID, targetType, date, homepage);
+        int result = Objects.hash(name, version, description, license, readme, commitID, targetType, date, homepage, packageDescriptionFile);
+        result = 31 * result + Arrays.hashCode(authors);
+        return result;
     }
 
     @Override
@@ -99,6 +116,8 @@ public class Version {
         sb.append(", targetType='").append(targetType).append('\'');
         sb.append(", date='").append(date).append('\'');
         sb.append(", homepage='").append(homepage).append('\'');
+        sb.append(", packageDescriptionFile='").append(packageDescriptionFile).append('\'');
+        sb.append(", authors=").append(Arrays.toString(authors));
         sb.append('}');
         return sb.toString();
     }

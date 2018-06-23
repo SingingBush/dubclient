@@ -2,8 +2,9 @@ package com.singingbush.dubclient;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
 import com.singingbush.dubclient.data.*;
-import org.apache.http.HttpResponse;
+import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
@@ -104,11 +105,14 @@ class DubClientImpl implements DubClient {
         try (final CloseableHttpResponse response = httpClient.execute(request)) {
             if(response != null) {
                 final int status = response.getStatusLine().getStatusCode();
-                if(status == 200) {
-                    return parseResponse(response, clazz);
-                } else {
-                    log.warn(String.format("DUB repository returned %s", status));
-                    log.debug("Server status message: {}", parseResponse(response, ErrorMessage.class).getStatusMessage());
+                final HttpEntity httpEntity = response.getEntity();
+                if(httpEntity != null) {
+                    if(status == 200) {
+                        return parseResponse(httpEntity, clazz);
+                    } else {
+                        log.warn(String.format("DUB repository returned %s", status));
+                        log.debug("Server status message: {}", parseResponse(httpEntity, ErrorMessage.class).getStatusMessage());
+                    }
                 }
             } else {
                 log.warn("no response from DUB repository");
@@ -120,8 +124,13 @@ class DubClientImpl implements DubClient {
         throw new DubRepositoryException("");
     }
 
-    private <T> T parseResponse(HttpResponse response, Class<T> clazz) throws IOException {
-        return gson.fromJson(EntityUtils.toString(response.getEntity(), Charset.forName("UTF-8")), clazz);
+    private <T> T parseResponse(@NotNull final HttpEntity entity, @NotNull final Class<T> clazz) throws IOException, DubRepositoryException {
+        try {
+            return gson.fromJson(EntityUtils.toString(entity, Charset.forName("UTF-8")), clazz);
+        } catch (final JsonSyntaxException e) {
+            log.error("unable to parse the json response from the dub repository", e);
+            throw new DubRepositoryException("the json response was not as expected", e);
+        }
     }
 
     @Override
