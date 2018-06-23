@@ -1,8 +1,10 @@
 package com.singingbush.dubclient;
 
+import com.singingbush.dubclient.data.DownloadStats;
 import com.singingbush.dubclient.data.PackageInfo;
 import com.singingbush.dubclient.data.PackageStats;
 import com.singingbush.dubclient.data.SearchResult;
+import com.singingbush.dubclient.data.VersionInfo;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.stream.Stream;
@@ -36,7 +38,7 @@ public interface DubClient {
      * @return Information about the specified version of the given package
      * May throw a {@link DubRepositoryException} if a problem occurs
      */
-    PackageInfo packageInfo(@NotNull String packageName, @NotNull String version) throws DubRepositoryException;
+    VersionInfo packageInfo(@NotNull String packageName, @NotNull String version) throws DubRepositoryException;
 
     /**
      * make a call to https://code.dlang.org/api/packages/{package}/stats
@@ -50,10 +52,10 @@ public interface DubClient {
      * make a call to https://code.dlang.org/api/packages/{package}/{version}/stats
      * @param packageName The name of a package to look for
      * @param version The version number for the given package
-     * @return Statistics about the specified version of the given package
+     * @return Statistics about downloads for the specified version of the given package
      * May throw a {@link DubRepositoryException} if a problem occurs
      */
-    PackageStats packageStats(@NotNull String packageName, @NotNull String version) throws DubRepositoryException;
+    DownloadStats packageStats(@NotNull String packageName, @NotNull String version) throws DubRepositoryException;
 
     /**
      * make a call to https://code.dlang.org/api/packages/{package}/latest

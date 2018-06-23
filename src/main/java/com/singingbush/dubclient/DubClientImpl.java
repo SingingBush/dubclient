@@ -2,10 +2,7 @@ package com.singingbush.dubclient;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.singingbush.dubclient.data.ErrorMessage;
-import com.singingbush.dubclient.data.PackageInfo;
-import com.singingbush.dubclient.data.PackageStats;
-import com.singingbush.dubclient.data.SearchResult;
+import com.singingbush.dubclient.data.*;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -66,12 +63,12 @@ class DubClientImpl implements DubClient {
     }
 
     @Override
-    public PackageInfo packageInfo(@NotNull final String packageName, @NotNull final String version) throws DubRepositoryException {
+    public VersionInfo packageInfo(@NotNull final String packageName, @NotNull final String version) throws DubRepositoryException {
         if (packageName.isEmpty() || version.isEmpty()) throw new IllegalArgumentException("args cannot be blank");
 
         final HttpUriRequest request = new HttpGet(String.format("%s/api/packages/%s/%s/info", repositoryUrl, packageName, version));
 
-        return callApi(request, PackageInfo.class);
+        return callApi(request, VersionInfo.class);
     }
 
     @Override
@@ -84,12 +81,12 @@ class DubClientImpl implements DubClient {
     }
 
     @Override
-    public PackageStats packageStats(@NotNull final String packageName, @NotNull final String version) throws DubRepositoryException {
+    public DownloadStats packageStats(@NotNull final String packageName, @NotNull final String version) throws DubRepositoryException {
         if (packageName.isEmpty() || version.isEmpty()) throw new IllegalArgumentException("args cannot be blank");
 
         final HttpUriRequest request = new HttpGet(String.format("%s/api/packages/%s/%s/stats", repositoryUrl, packageName, version));
 
-        return callApi(request, PackageStats.class);
+        return callApi(request, PackageStats.class).getDownloads();
     }
 
     @Override
@@ -101,7 +98,7 @@ class DubClientImpl implements DubClient {
         return callApi(request, String.class);
     }
 
-    private <T> T callApi(final HttpUriRequest request, final Class<T> clazz) throws DubRepositoryException {
+    private <T> T callApi(@NotNull final HttpUriRequest request, @NotNull final Class<T> clazz) throws DubRepositoryException {
         log.info("making HTTP request to " + request.getURI());
 
         try (final CloseableHttpResponse response = httpClient.execute(request)) {

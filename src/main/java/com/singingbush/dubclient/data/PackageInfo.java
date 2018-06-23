@@ -1,8 +1,10 @@
 package com.singingbush.dubclient.data;
 
-import java.time.LocalDateTime;
+import org.jetbrains.annotations.Nullable;
+
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -37,9 +39,13 @@ public class PackageInfo {
         return repository;
     }
 
-    // there's no timezone on the datetime stored in the repo, should we consider it UTC?
-    public LocalDateTime getDateAdded() {
-        return LocalDateTime.parse(dateAdded); // DUB Server returns datetime in ISO-8601 format, eg: 2018-04-21T11:45:59
+    @Nullable
+    public ZonedDateTime getDateAdded() {
+        if(dateAdded != null && !dateAdded.isEmpty()) {
+            // datetimes are generally ISO-8601 but may be missing timezone, default to UTC
+            return ZonedDateTime.parse(dateAdded, DateTimeFormatter.ISO_DATE_TIME.withZone(ZoneId.of("UTC")));
+        }
+        return null;
     }
 
     public String getName() {
