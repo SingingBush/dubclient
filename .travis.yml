@@ -1,13 +1,24 @@
 language: java
 
+# For some reason Oracle JDK doesn't install correctly on xenial or bionic
 dist: trusty
+
+jdk:
+  - oraclejdk8
+  - oraclejdk9
 
 jobs:
   include:
-    - stage: Build using various JDK versions
-      jdk: oraclejdk8
-    - jdk: oraclejdk9
-    - jdk: openjdk8
+    - stage: Test recent Java versions (OpenJDK)
+      jdk: openjdk10
+      dist: bionic
+    - jdk: openjdk11
+      dist: bionic
+    - jdk: openjdk12
+      dist: bionic
+    - jdk: openjdk13
+      dist: bionic
+
     - stage: Test Coverage
       jdk: oraclejdk8
       script: mvn clean verify jacoco:report coveralls:report
