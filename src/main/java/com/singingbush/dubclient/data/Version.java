@@ -62,6 +62,7 @@ public class Version {
         return date;
     }
 
+    @Nullable
     public String getHomepage() {
         return homepage;
     }

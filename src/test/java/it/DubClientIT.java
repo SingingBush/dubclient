@@ -28,7 +28,7 @@ public class DubClientIT {
         client = DubClient.builder().build();
     }
 
-    @Test(timeout = 5_000L)
+    @Test(timeout = 3_000L)
     public void testCallToCodeDlangOrg() throws DubRepositoryException {
         final String dunit = client.latestVersion("d-unit");
         assertTrue(dunit.split("\\.").length > 1);
@@ -36,14 +36,14 @@ public class DubClientIT {
         client.latestVersion("dunit");
     }
 
-    @Test(timeout = 5_000L)
+    @Test(timeout = 3_000L)
     public void testSearch() throws DubRepositoryException {
         final Stream<SearchResult> results = client.search("unit");
 
         assertTrue(results.allMatch(sr -> !sr.getName().isEmpty() && !sr.getDescription().isEmpty() && !sr.getVersion().isEmpty()));
     }
 
-    @Test(timeout = 5_000L)
+    @Test(timeout = 3_000L)
     public void testPackageInfo() throws DubRepositoryException {
         final PackageInfo info = client.packageInfo("vibe-d");
 
@@ -52,28 +52,53 @@ public class DubClientIT {
         assertAllGettersNotNull(info);
         assertAllGettersNotNull(info.getRepository());
         info.getVersions().parallelStream()
-            .forEach(ReflectionTestUtils.Assert::assertAllGettersNotNull);
+            .forEach(v -> {
+                assertNotNull("Version should have Name", v.getName());
+                assertNotNull("Version should have Description", v.getDescription());
+                assertNotNull("Version should have Version Number", v.getVersion());
+                assertNotNull("Version should have Date", v.getDate());
+                assertNotNull("Version should have Authors", v.getAuthors());
+                //assertNotNull("Version should have Homepage", v.getHomepage());
+                assertNotNull("Version should have Copyright", v.getCopyright());
+                assertNotNull("Version should have License", v.getLicense());
+                assertNotNull("Version should have Readme", v.getReadme());
+                assertNotNull("Version should have Package Description File", v.getPackageDescriptionFile());
+            });
 
         assertEquals("vibe-d", info.getName());
         assertEquals(OffsetDateTime.of(2013, 1, 17, 11, 52, 21, 0, ZoneOffset.UTC).toZonedDateTime(), info.getDateAdded());
         assertEquals(ZonedDateTime.parse("2013-01-17T11:52:21Z"), info.getDateAdded());
     }
 
-//    @Test(timeout = 5_000L)
-//    public void testPackageInfoGitlab() throws DubRepositoryException {
-//        // ensure projects on Gitlab don't have any weird quirks
-//        final PackageInfo info = client.packageInfo("gitlab-test-package");
-//
-//        assertNotNull(info);
-//        assertAllGettersNotNull(info);
-//        assertAllGettersNotNull(info.getRepository());
-//        info.getVersions().parallelStream()
-//            .forEach(ReflectionTestUtils.Assert::assertAllGettersNotNull);
-//
-//        assertEquals("gitlab-test-package", info.getName());
-//    }
+    @Test(timeout = 3_000L)
+    public void testPackageInfoGitlab() throws DubRepositoryException {
+        // ensure projects on Gitlab don't have any weird quirks
+        final PackageInfo info = client.packageInfo("ggplotd-cli");
 
-    @Test(timeout = 5_000L)
+        assertNotNull(info);
+        assertAllGettersNotNull(info);
+        assertAllGettersNotNull(info.getRepository());
+        info.getVersions().parallelStream()
+            .forEach(v -> {
+                assertNotNull("Version should have Name", v.getName());
+                assertNotNull("Version should have Description", v.getDescription());
+                assertNotNull("Version should have Version Number", v.getVersion());
+                assertNotNull("Version should have Date", v.getDate());
+                assertNotNull("Version should have Authors", v.getAuthors());
+                //assertNotNull("Version should have Homepage", v.getHomepage());
+                assertNotNull("Version should have Copyright", v.getCopyright());
+                assertNotNull("Version should have License", v.getLicense());
+                assertNotNull("Version should have Readme", v.getReadme());
+                assertNotNull("Version should have Package Description File", v.getPackageDescriptionFile());
+            });
+
+        assertEquals("ggplotd-cli", info.getName());
+
+        assertEquals(OffsetDateTime.of(2021, 4, 8, 6, 32, 59, 0, ZoneOffset.UTC).toZonedDateTime(), info.getDateAdded());
+        assertEquals(ZonedDateTime.parse("2021-04-08T06:32:59Z"), info.getDateAdded());
+    }
+
+    @Test(timeout = 3_000L)
     public void testPackageVersionInfo() throws DubRepositoryException {
         final VersionInfo info = client.packageInfo("ddbc", "0.2.4");
 
@@ -90,7 +115,7 @@ public class DubClientIT {
         assertAllGettersNotNull(info.getInfo());
     }
 
-    @Test(timeout = 5_000L)
+    @Test(timeout = 3_000L)
     public void testPackageStats() throws DubRepositoryException {
         final PackageStats stats = client.packageStats("vibe-d");
 
@@ -115,7 +140,7 @@ public class DubClientIT {
         assertNotNull(stats.getScore());
     }
 
-    @Test(timeout = 5_000L)
+    @Test(timeout = 3_000L)
     public void testPackageVersionStats() throws DubRepositoryException {
         final DownloadStats downloads = client.packageStats("vibe-d", "0.8.1");
 
