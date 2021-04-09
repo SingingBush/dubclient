@@ -66,7 +66,7 @@
         <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
-            <version>17.0.0</version>
+            <version>18.0.0</version>
             <scope>compile</scope>
         </dependency>
 
@@ -101,7 +101,7 @@
         <dependency>
             <groupId>org.junit.vintage</groupId>
             <artifactId>junit-vintage-engine</artifactId>
-            <version>5.5.2</version>
+            <version>5.7.0</version>
             <scope>test</scope>
         </dependency>
 
@@ -120,7 +120,7 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
             </plugin>
-                
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
