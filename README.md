@@ -1,6 +1,7 @@
 DUB Client
 ==========
 
+[![Java CI](https://github.com/SingingBush/dubclient/actions/workflows/maven.yml/badge.svg)](https://github.com/SingingBush/dubclient/actions/workflows/maven.yml)
 [![Build Status](https://travis-ci.org/SingingBush/dubclient.svg?branch=master)](https://travis-ci.org/SingingBush/dubclient)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.singingbush/dub-client/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.singingbush/dub-client)
 [![Javadocs](https://www.javadoc.io/badge/com.singingbush/dub-client.svg)](https://www.javadoc.io/doc/com.singingbush/dub-client)

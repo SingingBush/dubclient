@@ -5,14 +5,11 @@ dist: trusty
 
 jdk:
   - oraclejdk8
-  - oraclejdk9
 
 jobs:
   include:
     - stage: Test recent Java versions (OpenJDK)
-      jdk: openjdk10
-      dist: bionic
-    - jdk: openjdk11
+      jdk: openjdk11
       dist: bionic
     - jdk: openjdk12
       dist: bionic
