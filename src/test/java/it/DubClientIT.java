@@ -3,14 +3,17 @@ package it;
 import com.singingbush.dubclient.DubClient;
 import com.singingbush.dubclient.DubRepositoryException;
 import com.singingbush.dubclient.data.*;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 
 import java.time.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
 import static it.ReflectionTestUtils.Assert.assertAllGettersNotNull;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * These tests makes real HTTP calls to https://code.dlang.org API to ensure the code
@@ -23,12 +26,14 @@ public class DubClientIT {
 
     private DubClient client;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         client = DubClient.builder().build();
     }
 
-    @Test(timeout = 3_000L)
+    @Test
+    @DisplayName("call dlang.org for latest dependency version")
+    @Timeout(value = 3L, unit = TimeUnit.SECONDS)
     public void testCallToCodeDlangOrg() throws DubRepositoryException {
         final String dunit = client.latestVersion("d-unit");
         assertTrue(dunit.split("\\.").length > 1);
@@ -36,14 +41,18 @@ public class DubClientIT {
         client.latestVersion("dunit");
     }
 
-    @Test(timeout = 3_000L)
+    @Test
+    @DisplayName("call dlang.org for search")
+    @Timeout(value = 3L, unit = TimeUnit.SECONDS)
     public void testSearch() throws DubRepositoryException {
         final Stream<SearchResult> results = client.search("unit");
 
         assertTrue(results.allMatch(sr -> !sr.getName().isEmpty() && !sr.getDescription().isEmpty() && !sr.getVersion().isEmpty()));
     }
 
-    @Test(timeout = 3_000L)
+    @Test
+    @DisplayName("call dlang.org for package info")
+    @Timeout(value = 3L, unit = TimeUnit.SECONDS)
     public void testPackageInfo() throws DubRepositoryException {
         final PackageInfo info = client.packageInfo("vibe-d");
 
@@ -53,16 +62,16 @@ public class DubClientIT {
         assertAllGettersNotNull(info.getRepository());
         info.getVersions().parallelStream()
             .forEach(v -> {
-                assertNotNull("Version should have Name", v.getName());
-                assertNotNull("Version should have Description", v.getDescription());
-                assertNotNull("Version should have Version Number", v.getVersion());
-                assertNotNull("Version should have Date", v.getDate());
-                assertNotNull("Version should have Authors", v.getAuthors());
-                //assertNotNull("Version should have Homepage", v.getHomepage());
-                assertNotNull("Version should have Copyright", v.getCopyright());
-                assertNotNull("Version should have License", v.getLicense());
-                assertNotNull("Version should have Readme", v.getReadme());
-                assertNotNull("Version should have Package Description File", v.getPackageDescriptionFile());
+                assertNotNull(v.getName(), "Version should have Name");
+                assertNotNull(v.getDescription(), "Version should have Description");
+                assertNotNull(v.getVersion(), "Version should have Version Number");
+                assertNotNull(v.getDate(), "Version should have Date");
+                assertNotNull(v.getAuthors(), "Version should have Authors");
+                //assertNotNull(v.getHomepage(), "Version should have Homepage");
+                assertNotNull(v.getCopyright(), "Version should have Copyright");
+                assertNotNull(v.getLicense(), "Version should have License");
+                assertNotNull(v.getReadme(), "Version should have Readme");
+                assertNotNull(v.getPackageDescriptionFile(), "Version should have Package Description File");
             });
 
         assertEquals("vibe-d", info.getName());
@@ -70,7 +79,9 @@ public class DubClientIT {
         assertEquals(ZonedDateTime.parse("2013-01-17T11:52:21Z"), info.getDateAdded());
     }
 
-    @Test(timeout = 3_000L)
+    @Test
+    @DisplayName("call dlang.org for package info (gitlab)")
+    @Timeout(value = 3L, unit = TimeUnit.SECONDS)
     public void testPackageInfoGitlab() throws DubRepositoryException {
         // ensure projects on Gitlab don't have any weird quirks
         final PackageInfo info = client.packageInfo("ggplotd-cli");
@@ -80,16 +91,16 @@ public class DubClientIT {
         assertAllGettersNotNull(info.getRepository());
         info.getVersions().parallelStream()
             .forEach(v -> {
-                assertNotNull("Version should have Name", v.getName());
-                assertNotNull("Version should have Description", v.getDescription());
-                assertNotNull("Version should have Version Number", v.getVersion());
-                assertNotNull("Version should have Date", v.getDate());
-                assertNotNull("Version should have Authors", v.getAuthors());
-                //assertNotNull("Version should have Homepage", v.getHomepage());
-                assertNotNull("Version should have Copyright", v.getCopyright());
-                assertNotNull("Version should have License", v.getLicense());
-                assertNotNull("Version should have Readme", v.getReadme());
-                assertNotNull("Version should have Package Description File", v.getPackageDescriptionFile());
+                assertNotNull(v.getName(),"Version should have Name");
+                assertNotNull(v.getDescription(),"Version should have Description");
+                assertNotNull(v.getVersion(),"Version should have Version Number");
+                assertNotNull(v.getDate(),"Version should have Date");
+                assertNotNull(v.getAuthors(), "Version should have Authors");
+                //assertNotNull(v.getHomepage(), "Version should have Homepage");
+                assertNotNull(v.getCopyright(), "Version should have Copyright");
+                assertNotNull(v.getLicense(), "Version should have License");
+                assertNotNull(v.getReadme(), "Version should have Readme");
+                assertNotNull(v.getPackageDescriptionFile(), "Version should have Package Description File");
             });
 
         assertEquals("ggplotd-cli", info.getName());
@@ -98,7 +109,9 @@ public class DubClientIT {
         assertEquals(ZonedDateTime.parse("2021-04-08T06:32:59Z"), info.getDateAdded());
     }
 
-    @Test(timeout = 3_000L)
+    @Test
+    @DisplayName("call dlang.org for package version info")
+    @Timeout(value = 3L, unit = TimeUnit.SECONDS)
     public void testPackageVersionInfo() throws DubRepositoryException {
         final VersionInfo info = client.packageInfo("ddbc", "0.2.4");
 
@@ -115,7 +128,9 @@ public class DubClientIT {
         assertAllGettersNotNull(info.getInfo());
     }
 
-    @Test(timeout = 3_000L)
+    @Test
+    @DisplayName("call dlang.org for package stats")
+    @Timeout(value = 3L, unit = TimeUnit.SECONDS)
     public void testPackageStats() throws DubRepositoryException {
         final PackageStats stats = client.packageStats("vibe-d");
 
@@ -140,7 +155,9 @@ public class DubClientIT {
         assertNotNull(stats.getScore());
     }
 
-    @Test(timeout = 3_000L)
+    @Test
+    @DisplayName("call dlang.org for package version stats")
+    @Timeout(value = 3L, unit = TimeUnit.SECONDS)
     public void testPackageVersionStats() throws DubRepositoryException {
         final DownloadStats downloads = client.packageStats("vibe-d", "0.8.1");
 

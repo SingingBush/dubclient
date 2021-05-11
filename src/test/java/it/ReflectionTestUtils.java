@@ -7,8 +7,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * @author Samael Bate (singingbush)
@@ -53,7 +53,7 @@ public class ReflectionTestUtils {
                         String.format("%s::%s() returned null", obj.getClass().getSimpleName(), m.getName());
 
                     try {
-                        assertNotNull(msg, m.invoke(obj, null));
+                        assertNotNull(m.invoke(obj, null), msg);
                     } catch (IllegalAccessException | InvocationTargetException e) {
                         fail(e.getMessage());
                     }

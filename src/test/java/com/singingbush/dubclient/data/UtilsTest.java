@@ -1,10 +1,11 @@
 package com.singingbush.dubclient.data;
 
-import org.junit.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import java.time.ZonedDateTime;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Samael Bate (singingbush)
@@ -12,7 +13,8 @@ import static org.junit.Assert.*;
  */
 public class UtilsTest {
 
-    @Test
+    @DisplayName("testing Utils.parseDatetime")
+    @Test //todo: make this a parameterised test
     public void parseDatetime() {
         assertNull(Utils.parseDatetime(null));
         assertNull(Utils.parseDatetime(""));
@@ -25,6 +27,6 @@ public class UtilsTest {
         assertNotNull(dt2);
         assertEquals(ZonedDateTime.parse("2017-09-21T18:45:00Z"), dt2);
 
-        assertEquals("both datetime values should be the same", dt1, dt2);
+        assertEquals(dt1, dt2, "both datetime values should be the same");
     }
 }
