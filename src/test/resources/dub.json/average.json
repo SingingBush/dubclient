@@ -1,0 +1,17 @@
+{
+    "name": "myproject",
+    "authors": [
+        "My Name"
+    ],
+    "description": "My first project",
+    "copyright": "Copyright © 2017, imadev",
+    "license": "Boost",
+    "dependencies": {
+        "vibe-d": "~>1.0",
+        "ddbc": "~>0.5"
+    },
+    "subPackages": [
+        "./component1/",
+        "./component2/"
+    ]
+}

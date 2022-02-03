@@ -7,8 +7,18 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.*;
+import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
@@ -31,9 +41,100 @@ public class DubClientIT {
         client = DubClient.builder().build();
     }
 
+    @ParameterizedTest
+    @ValueSource(strings = { "dub.json/minimal.json", "dub.sdl/minimal.sdl" })
+    @DisplayName("parse a minimal dub.json or dub.sdl file")
+    @Timeout(value = 10L, unit = TimeUnit.MILLISECONDS)
+    public void testParseMinimalProjectFile(final String testFile) throws URISyntaxException, FileNotFoundException {
+        final File dubFile = Paths.get(this.getClass().getClassLoader().getResource(testFile).toURI()).toFile();
+
+        final DubProject project = client.parseProjectFile(dubFile);
+
+        assertEquals("myproject", project.getName());
+        assertEquals("My first project", project.getDescription());
+        assertEquals(Collections.singletonList("My Name"), project.getAuthors());
+        assertEquals("Copyright © 2017, imadev", project.getCopyright());
+        assertEquals("Boost", project.getLicense());
+        assertTrue(project.getDependencies().isEmpty());
+        assertTrue(project.getSubPackages().isEmpty());
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = { "dub.json/average.json", "dub.sdl/average.sdl" })
+    @DisplayName("parse an average dub.json or dub.sdl file")
+    @Timeout(value = 10L, unit = TimeUnit.MILLISECONDS)
+    public void testParseAverageProjectFile(final String testFile) throws URISyntaxException, FileNotFoundException {
+        final File dubFile = Paths.get(this.getClass().getClassLoader().getResource(testFile).toURI()).toFile();
+
+        final DubProject project = client.parseProjectFile(dubFile);
+
+        assertEquals("myproject", project.getName());
+        assertEquals("My first project", project.getDescription());
+        assertEquals(Collections.singletonList("My Name"), project.getAuthors());
+        assertEquals("Copyright © 2017, imadev", project.getCopyright());
+        assertEquals("Boost", project.getLicense());
+        assertFalse(project.getDependencies().isEmpty());
+        assertEquals(2, project.getDependencies().size());
+        assertFalse(project.getSubPackages().isEmpty());
+        assertEquals(2, project.getSubPackages().size());
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = { "dub.json/detailed.json", "dub.sdl/detailed.sdl" })
+    @DisplayName("parse a detailed dub.json or dub.sdl file")
+    @Timeout(value = 80L, unit = TimeUnit.MILLISECONDS)
+    public void testParseDetailedProjectFile(final String testFile) throws URISyntaxException, FileNotFoundException {
+        final File dubFile = Paths.get(this.getClass().getClassLoader().getResource(testFile).toURI()).toFile();
+
+        final DubProject project = client.parseProjectFile(dubFile);
+
+        assertEquals("myproject", project.getName());
+        assertEquals("My first project", project.getDescription());
+        assertEquals(Collections.singletonList("My Name"), project.getAuthors());
+        assertEquals("Copyright © 2017, imadev", project.getCopyright());
+        assertEquals("Boost", project.getLicense());
+        assertFalse(project.getDependencies().isEmpty());
+        assertEquals(2, project.getDependencies().size());
+        assertEquals(2, project.getSubPackages().size());
+    }
+
+    @Test
+    @DisplayName("parse dub.json content via reader")
+    @Timeout(value = 80L, unit = TimeUnit.MILLISECONDS)
+    public void testParseDubJsonViaReader() throws URISyntaxException, IOException {
+        final BufferedReader reader = Files.newBufferedReader(Paths.get(this.getClass().getClassLoader().getResource("dub.json/average.json").toURI()));
+
+        final DubProject project = client.parseDubJsonFile(reader);
+
+        assertEquals("myproject", project.getName());
+        assertEquals("My first project", project.getDescription());
+        assertEquals(Collections.singletonList("My Name"), project.getAuthors());
+        assertEquals("Copyright © 2017, imadev", project.getCopyright());
+        assertEquals("Boost", project.getLicense());
+        assertFalse(project.getDependencies().isEmpty());
+        assertEquals(2, project.getDependencies().size());
+    }
+
+    @Test
+    @DisplayName("parse dub.sdl content via reader")
+    @Timeout(value = 80L, unit = TimeUnit.MILLISECONDS)
+    public void testParseDubSdlViaReader() throws URISyntaxException, IOException {
+        final BufferedReader reader = Files.newBufferedReader(Paths.get(this.getClass().getClassLoader().getResource("dub.sdl/average.sdl").toURI()));
+
+        final DubProject project = client.parseDubSdlFile(reader);
+
+        assertEquals("myproject", project.getName());
+        assertEquals("My first project", project.getDescription());
+        assertEquals(Collections.singletonList("My Name"), project.getAuthors());
+        assertEquals("Copyright © 2017, imadev", project.getCopyright());
+        assertEquals("Boost", project.getLicense());
+        assertFalse(project.getDependencies().isEmpty());
+        assertEquals(2, project.getDependencies().size());
+    }
+
     @Test
     @DisplayName("call dlang.org for latest dependency version")
-    @Timeout(value = 3L, unit = TimeUnit.SECONDS)
+    @Timeout(value = 900L, unit = TimeUnit.MILLISECONDS)
     public void testCallToCodeDlangOrg() throws DubRepositoryException {
         final String dunit = client.latestVersion("d-unit");
         assertTrue(dunit.split("\\.").length > 1);
@@ -43,7 +144,7 @@ public class DubClientIT {
 
     @Test
     @DisplayName("call dlang.org for search")
-    @Timeout(value = 3L, unit = TimeUnit.SECONDS)
+    @Timeout(value = 700L, unit = TimeUnit.MILLISECONDS)
     public void testSearch() throws DubRepositoryException {
         final Stream<SearchResult> results = client.search("unit");
 
@@ -52,7 +153,7 @@ public class DubClientIT {
 
     @Test
     @DisplayName("call dlang.org for package info")
-    @Timeout(value = 3L, unit = TimeUnit.SECONDS)
+    @Timeout(value = 1200L, unit = TimeUnit.MILLISECONDS)
     public void testPackageInfo() throws DubRepositoryException {
         final PackageInfo info = client.packageInfo("vibe-d");
 
@@ -81,7 +182,7 @@ public class DubClientIT {
 
     @Test
     @DisplayName("call dlang.org for package info (gitlab)")
-    @Timeout(value = 3L, unit = TimeUnit.SECONDS)
+    @Timeout(value = 800L, unit = TimeUnit.MILLISECONDS)
     public void testPackageInfoGitlab() throws DubRepositoryException {
         // ensure projects on Gitlab don't have any weird quirks
         final PackageInfo info = client.packageInfo("ggplotd-cli");
@@ -111,7 +212,7 @@ public class DubClientIT {
 
     @Test
     @DisplayName("call dlang.org for package version info")
-    @Timeout(value = 3L, unit = TimeUnit.SECONDS)
+    @Timeout(value = 800L, unit = TimeUnit.MILLISECONDS)
     public void testPackageVersionInfo() throws DubRepositoryException {
         final VersionInfo info = client.packageInfo("ddbc", "0.2.4");
 
@@ -130,7 +231,7 @@ public class DubClientIT {
 
     @Test
     @DisplayName("call dlang.org for package stats")
-    @Timeout(value = 3L, unit = TimeUnit.SECONDS)
+    @Timeout(value = 700L, unit = TimeUnit.MILLISECONDS)
     public void testPackageStats() throws DubRepositoryException {
         final PackageStats stats = client.packageStats("vibe-d");
 
@@ -157,7 +258,7 @@ public class DubClientIT {
 
     @Test
     @DisplayName("call dlang.org for package version stats")
-    @Timeout(value = 3L, unit = TimeUnit.SECONDS)
+    @Timeout(value = 2200L, unit = TimeUnit.MILLISECONDS)
     public void testPackageVersionStats() throws DubRepositoryException {
         final DownloadStats downloads = client.packageStats("vibe-d", "0.8.1");
 

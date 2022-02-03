@@ -37,7 +37,7 @@ public class DubClientTest {
 
     @BeforeEach
     public void setUp() throws Exception {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         client = DubClient.builder().build();
 
         ReflectionTestUtils.setField(client, "httpClient", httpClient);

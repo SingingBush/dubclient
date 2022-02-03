@@ -1,0 +1,9 @@
+{
+    "name": "myproject",
+    "authors": [
+        "My Name"
+    ],
+    "description": "My first project",
+    "copyright": "Copyright © 2017, imadev",
+    "license": "Boost"
+}

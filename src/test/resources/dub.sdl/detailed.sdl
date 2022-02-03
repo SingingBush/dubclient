@@ -1,0 +1,19 @@
+name "myproject"
+description "My first project"
+authors "My Name"
+copyright "Copyright © 2017, imadev"
+license "Boost"
+dependency "vibe-d" version="~>1.0"
+dependency "ddbc" version="~>0.5"
+subPackage {
+	name "component1"
+	targetType "library"
+	sourcePaths "component1/source"
+	importPaths "component1/source"
+}
+subPackage {
+	name "component2"
+	targetType "library"
+	sourcePaths "component2/source"
+	importPaths "component2/source"
+}

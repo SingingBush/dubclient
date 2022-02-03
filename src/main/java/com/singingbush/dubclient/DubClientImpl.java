@@ -15,7 +15,10 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.Reader;
 import java.nio.charset.Charset;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
@@ -43,6 +46,34 @@ class DubClientImpl implements DubClient {
             .build();
 
         gson = new GsonBuilder().create();
+    }
+
+    @Override
+    public DubProject parseProjectFile(@NotNull File dubFile) {
+        if (!dubFile.exists()) throw new IllegalArgumentException("dub file does not exist");
+        if (!dubFile.isFile()) throw new IllegalArgumentException("dub file does not a valid file");
+        if (!dubFile.canRead()) throw new IllegalArgumentException("dub file cannot be read");
+
+        final DubFileParser parser = dubFile.getName().endsWith(".json") ? new JsonDubFileParser() : new SdlDubFileParser();
+
+        try {
+            return parser.parse(dubFile);
+        } catch (final FileNotFoundException e) {
+            log.error(String.format("The file '%s' was not found", dubFile.getName()), e);
+        }
+        return null; // todo: don't return null, throw a custom exception
+    }
+
+    @Override
+    public DubProject parseDubJsonFile(@NotNull Reader reader) {
+        final DubFileParser parser = new JsonDubFileParser();
+        return parser.parse(reader);
+    }
+
+    @Override
+    public DubProject parseDubSdlFile(@NotNull Reader reader) {
+        final DubFileParser parser = new SdlDubFileParser();
+        return parser.parse(reader);
     }
 
     @Override
