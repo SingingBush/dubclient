@@ -1,4 +1,7 @@
 name "myproject"
+targetType "executable"
+importPaths "source"
+sourcePaths "source"
 description "My first project"
 authors "My Name"
 copyright "Copyright © 2017, imadev"

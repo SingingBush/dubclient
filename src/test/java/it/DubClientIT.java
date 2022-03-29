@@ -89,6 +89,9 @@ public class DubClientIT {
         final DubProject project = client.parseProjectFile(dubFile);
 
         assertEquals("myproject", project.getName());
+        assertNotNull(project.getTargetType()); // doesn't have to be defined
+        assertNotNull(project.getSourcePaths());
+        assertNotNull(project.getImportPaths());
         assertEquals("My first project", project.getDescription());
         assertEquals(Collections.singletonList("My Name"), project.getAuthors());
         assertEquals("Copyright © 2017, imadev", project.getCopyright());
@@ -96,6 +99,37 @@ public class DubClientIT {
         assertFalse(project.getDependencies().isEmpty());
         assertEquals(2, project.getDependencies().size());
         assertEquals(2, project.getSubPackages().size());
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {
+        ".dub/packages/mysql-native-3.1.0/mysql-native/dub.json",
+        ".dub/packages/taggedalgebraic-0.11.22/taggedalgebraic/dub.json",
+        ".dub/packages/vibe-d-0.9.4/vibe-d/dub.json",
+        ".dub/packages/ddbc-0.5.4/ddbc/dub.json",
+    })
+    @DisplayName("parse example dub files from well known packages")
+    @Timeout(value = 80L, unit = TimeUnit.MILLISECONDS)
+    public void testParseRealProjectFiles(final String testFile) throws URISyntaxException, FileNotFoundException {
+        final File dubFile = Paths.get(this.getClass().getClassLoader().getResource(testFile).toURI()).toFile();
+
+        final DubProject project = client.parseProjectFile(dubFile);
+
+        assertNotNull(project.getName());
+        //assertNotNull(project.getTargetType()); // doesn't have to be defined
+        assertNotNull(project.getSourcePaths());
+        assertNotNull(project.getImportPaths());
+        assertNotNull(project.getDescription());
+        assertNotNull(project.getAuthors());
+        //assertNotNull(project.getCopyright()); // DDBC doesn't define copyright
+        assertNotNull(project.getLicense());
+        //assertNotNull(project.getVersions());
+        //assertNotNull(project.getBuildRequirements()); // not all the included projects specify build requirements
+        assertNotNull(project.getAllDependencies());
+        assertNotNull(project.getSubPackages());
+        assertNotNull(project.getConfigurations());
+        assertFalse(project.getConfigurations().isEmpty());
+        //assertNotNull(project.getToolchainRequirements()); // not all the included projects specify toolchainRequirements
     }
 
     @Test

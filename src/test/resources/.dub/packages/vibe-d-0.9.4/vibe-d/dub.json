@@ -1,0 +1,117 @@
+{
+	"-ddoxFilterArgs": [
+		"--unittest-examples",
+		"--min-protection=Protected",
+		"--ex",
+		"vibe.core.drivers.",
+		"--ex",
+		"vibe.internal.",
+		"--ex",
+		"vibe.web.internal.",
+		"--ex",
+		"diet.internal",
+		"--ex",
+		"stdx.",
+		"--ex",
+		"eventcore.internal.",
+		"--ex",
+		"eventcore.drivers.",
+		"--ex",
+		"mir.",
+		"--ex",
+		"openssl_version"
+	],
+	"authors": [
+		"Sönke Ludwig",
+		"Mathias 'Geod24' Lang",
+		"Etienne Cimon",
+		"Martin Nowak",
+		"Mihails 'Dicebot' Strasuns",
+		"150 contributors total"
+	],
+	"configurations": [
+		{
+			"name": "vibe-core",
+			"subConfigurations": {
+				"vibe-d:core": "vibe-core"
+			},
+			"targetType": "library"
+		},
+		{
+			"name": "win32_mscoff",
+			"subConfigurations": {
+				"vibe-d:core": "win32_mscoff"
+			},
+			"targetType": "library"
+		},
+		{
+			"name": "libevent",
+			"subConfigurations": {
+				"vibe-d:core": "libevent"
+			},
+			"targetType": "library"
+		},
+		{
+			"name": "libasync",
+			"subConfigurations": {
+				"vibe-d:core": "libasync"
+			},
+			"targetType": "library"
+		},
+		{
+			"name": "win32",
+			"subConfigurations": {
+				"vibe-d:core": "win32"
+			},
+			"targetType": "library"
+		}
+	],
+	"copyright": "Copyright © 2012-2020 Sönke Ludwig",
+	"dependencies": {
+		"vibe-d:crypto": ">=0.0.0",
+		"vibe-d:data": ">=0.0.0",
+		"vibe-d:http": ">=0.0.0",
+		"vibe-d:inet": ">=0.0.0",
+		"vibe-d:mail": ">=0.0.0",
+		"vibe-d:mongodb": ">=0.0.0",
+		"vibe-d:redis": ">=0.0.0",
+		"vibe-d:stream": ">=0.0.0",
+		"vibe-d:textfilter": ">=0.0.0",
+		"vibe-d:tls": ">=0.0.0",
+		"vibe-d:utils": ">=0.0.0",
+		"vibe-d:web": ">=0.0.0"
+	},
+	"description": "Event driven web and concurrency framework",
+	"homepage": "https://vibed.org/",
+	"importPaths": [
+		"source/"
+	],
+	"license": "MIT",
+	"name": "vibe-d",
+	"sourceFiles": [
+		"source/vibe/d.d",
+		"source/vibe/vibe.d"
+	],
+	"sourcePaths": [
+		"lib"
+	],
+	"subPackages": [
+		"utils",
+		"data",
+		"core",
+		"stream",
+		"tls",
+		"crypto",
+		"textfilter",
+		"inet",
+		"mail",
+		"http",
+		"mongodb",
+		"redis",
+		"web"
+	],
+	"systemDependencies": "Optionally OpenSSL 1.1.x",
+	"targetName": "vibed",
+	"targetType": "library",
+	"version": "0.9.4"
+}

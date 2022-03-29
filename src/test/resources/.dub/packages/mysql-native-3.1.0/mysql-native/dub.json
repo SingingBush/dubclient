@@ -1,0 +1,65 @@
+{
+	"authors": [
+		"Steve Teale",
+		"James W. Oliphant",
+		"Simen Endsjø",
+		"Sönke Ludwig",
+		"Sergey Shamov",
+		"Nick Sabalausky",
+		"Steven Schveighoffer"
+	],
+	"buildTypes": {
+		"ddox": {
+			"buildOptions": [
+				"syntaxOnly"
+			],
+			"dflags": [
+				"-c",
+				"-Df__dummy.html",
+				"-Xfdocs.json"
+			],
+			"versions": [
+				"MySQLDocs"
+			]
+		}
+	},
+	"configurations": [
+		{
+			"name": "library",
+			"targetType": "library"
+		},
+		{
+			"debugVersions": [
+				"MYSQLN_TESTS"
+			],
+			"name": "unittest",
+			"targetType": "sourceLibrary"
+		}
+	],
+	"copyright": "Copyright (c) 2011-2021 Steve Teale, James W. Oliphant, Simen Endsjø, Sönke Ludwig, Sergey Shamov, Nick Sabalausky, and Steven Schveighoffer",
+	"dependencies": {
+		"vibe-core": {
+			"optional": true,
+			"version": ">=1.16.0"
+		}
+	},
+	"description": "A native MySQL driver implementation based on Steve Teale's original",
+	"importPaths": [
+		"source/"
+	],
+	"license": "BSL-1.0",
+	"name": "mysql-native",
+	"sourcePaths": [
+		"source/"
+	],
+	"subPackages": [
+		"./integration-tests",
+		"./integration-tests-vibe",
+		"./integration-tests-phobos",
+		"./testconn"
+	],
+	"toolchainRequirements": {
+		"frontend": ">=2.68.0"
+	},
+	"version": "3.1.0"
+}

@@ -1,5 +1,12 @@
 {
     "name": "myproject",
+    "targetType": "executable",
+    "importPaths": [
+        "source/"
+    ],
+    "sourcePaths": [
+        "source/"
+    ],
     "authors": [
         "My Name"
     ],

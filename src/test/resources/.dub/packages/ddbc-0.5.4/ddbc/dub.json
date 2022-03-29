@@ -1,0 +1,317 @@
+{
+	"authors": [
+		"Vadim Lopatin"
+	],
+	"buildRequirements": [
+		"allowWarnings"
+	],
+	"configurations": [
+		{
+			"copyFiles-windows-x86": [
+				"libs/win32/sqlite3.dll",
+				"libs/win32/libpq.dll"
+			],
+			"copyFiles-windows-x86_64": [
+				"libs/win64/libpq.dll",
+				"libs/win64/sqlite3.dll"
+			],
+			"dependencies": {
+				"derelict-pq": "~>2.2.0",
+				"mysql-native": "~>3.0.3",
+				"odbc": "~>1.0.0"
+			},
+			"excludedSourceFiles-windows-x86-ldc": [
+				"test/ddbctest/main.d",
+				"test/ddbctest/main.d"
+			],
+			"excludedSourceFiles-windows-x86_64": [
+				"test/ddbctest/main.d",
+				"test/ddbctest/main.d"
+			],
+			"excludedSourceFiles-windows-x86_mscoff-dmd": [
+				"test/ddbctest/main.d",
+				"test/ddbctest/main.d"
+			],
+			"excludedSourceFiles-windows-x86_omf-dmd": [
+				"test/ddbctest/main.d",
+				"test/ddbctest/main.d"
+			],
+			"lflags-osx": [
+				"-L/usr/local/opt/sqlite3/lib/"
+			],
+			"libs-posix": [
+				"sqlite3",
+				"odbc"
+			],
+			"libs-windows": [
+				"odbc32"
+			],
+			"name": "full",
+			"sourceFiles-windows-x86-ldc": [
+				"libs/win32-mscoff/sqlite3.lib"
+			],
+			"sourceFiles-windows-x86_64": [
+				"libs/win64/sqlite3.lib"
+			],
+			"sourceFiles-windows-x86_mscoff-dmd": [
+				"libs/win32-mscoff/sqlite3.lib"
+			],
+			"sourceFiles-windows-x86_omf-dmd": [
+				"libs/win32/sqlite3.lib"
+			],
+			"targetType": "staticLibrary",
+			"versions": [
+				"USE_MYSQL",
+				"USE_SQLITE",
+				"USE_PGSQL",
+				"USE_ODBC"
+			]
+		},
+		{
+			"copyFiles-windows-x86": [
+				"libs/win32/sqlite3.dll",
+				"libs/win32/libpq.dll"
+			],
+			"dependencies": {
+				"derelict-pq": "~>2.2.0",
+				"mysql-native": "~>3.0.3",
+				"odbc": "~>1.0.0"
+			},
+			"excludedSourceFiles-windows-x86": [
+				"test/ddbctest/main.d",
+				"test/ddbctest/main.d"
+			],
+			"libs-windows": [
+				"odbc32"
+			],
+			"name": "full-omf",
+			"platforms": [
+				"windows-x86"
+			],
+			"sourceFiles-windows-x86": [
+				"libs/win32/sqlite3.lib"
+			],
+			"targetType": "staticLibrary",
+			"versions": [
+				"USE_MYSQL",
+				"USE_SQLITE",
+				"USE_PGSQL",
+				"USE_ODBC"
+			]
+		},
+		{
+			"dependencies": {
+				"mysql-native": "~>3.0.3"
+			},
+			"excludedSourceFiles": [
+				"test/ddbctest/main.d",
+				"test/ddbctest/main.d"
+			],
+			"name": "MySQL",
+			"targetType": "staticLibrary",
+			"versions": [
+				"USE_MYSQL"
+			]
+		},
+		{
+			"copyFiles-windows-x86": [
+				"libs/win32/sqlite3.dll"
+			],
+			"copyFiles-windows-x86_64": [
+				"libs/win64/sqlite3.dll"
+			],
+			"excludedSourceFiles-windows-x86-ldc": [
+				"test/ddbctest/main.d",
+				"test/ddbctest/main.d"
+			],
+			"excludedSourceFiles-windows-x86_64": [
+				"test/ddbctest/main.d",
+				"test/ddbctest/main.d"
+			],
+			"excludedSourceFiles-windows-x86_mscoff-dmd": [
+				"test/ddbctest/main.d",
+				"test/ddbctest/main.d"
+			],
+			"excludedSourceFiles-windows-x86_omf-dmd": [
+				"test/ddbctest/main.d",
+				"test/ddbctest/main.d"
+			],
+			"lflags-osx": [
+				"-L/usr/local/opt/sqlite3/lib/"
+			],
+			"libs-posix": [
+				"sqlite3"
+			],
+			"name": "SQLite",
+			"sourceFiles-windows-x86-ldc": [
+				"libs/win32-mscoff/sqlite3.lib"
+			],
+			"sourceFiles-windows-x86_64": [
+				"libs/win64/sqlite3.lib"
+			],
+			"sourceFiles-windows-x86_mscoff-dmd": [
+				"libs/win32-mscoff/sqlite3.lib"
+			],
+			"sourceFiles-windows-x86_omf-dmd": [
+				"libs/win32/sqlite3.lib"
+			],
+			"targetType": "staticLibrary",
+			"versions": [
+				"USE_SQLITE"
+			]
+		},
+		{
+			"copyFiles-windows-x86": [
+				"libs/win32/sqlite3.dll"
+			],
+			"excludedSourceFiles-windows-x86": [
+				"test/ddbctest/main.d",
+				"test/ddbctest/main.d"
+			],
+			"name": "SQLite-omf",
+			"platforms": [
+				"windows-x86-dmd"
+			],
+			"sourceFiles-windows-x86": [
+				"libs/win32/sqlite3.lib"
+			],
+			"targetType": "staticLibrary",
+			"versions": [
+				"USE_SQLITE"
+			]
+		},
+		{
+			"copyFiles-windows-x86": [
+				"libs/win32/libpq.dll"
+			],
+			"copyFiles-windows-x86_64": [
+				"libs/win64/libpq.dll"
+			],
+			"dependencies": {
+				"derelict-pq": "~>2.2.0"
+			},
+			"excludedSourceFiles": [
+				"test/ddbctest/main.d",
+				"test/ddbctest/main.d"
+			],
+			"libs-posix": [
+				"pq"
+			],
+			"name": "PGSQL",
+			"targetType": "staticLibrary",
+			"versions": [
+				"USE_PGSQL"
+			]
+		},
+		{
+			"dependencies": {
+				"odbc": "~>1.0.0"
+			},
+			"excludedSourceFiles": [
+				"test/ddbctest/main.d",
+				"test/ddbctest/main.d"
+			],
+			"libs-posix": [
+				"odbc"
+			],
+			"libs-windows": [
+				"odbc32"
+			],
+			"name": "ODBC",
+			"targetType": "staticLibrary",
+			"versions": [
+				"USE_ODBC"
+			]
+		},
+		{
+			"excludedSourceFiles": [
+				"test/ddbctest/main.d",
+				"test/ddbctest/main.d"
+			],
+			"name": "API",
+			"targetType": "staticLibrary"
+		},
+		{
+			"copyFiles-windows-x86": [
+				"libs/win32/sqlite3.dll"
+			],
+			"copyFiles-windows-x86_64": [
+				"libs/win64/sqlite3.dll"
+			],
+			"excludedSourceFiles-windows-x86-ldc": [],
+			"excludedSourceFiles-windows-x86_64": [],
+			"excludedSourceFiles-windows-x86_mscoff-dmd": [],
+			"excludedSourceFiles-windows-x86_omf-dmd": [],
+			"lflags-osx": [
+				"-L/usr/local/opt/sqlite3/lib/"
+			],
+			"libs-posix": [
+				"sqlite3"
+			],
+			"mainSourceFile": "test/ddbctest/main.d",
+			"name": "test",
+			"sourceFiles-windows-x86-ldc": [
+				"libs/win32-mscoff/sqlite3.lib"
+			],
+			"sourceFiles-windows-x86_64": [
+				"libs/win64/sqlite3.lib"
+			],
+			"sourceFiles-windows-x86_mscoff-dmd": [
+				"libs/win32-mscoff/sqlite3.lib"
+			],
+			"sourceFiles-windows-x86_omf-dmd": [
+				"libs/win32/sqlite3.lib"
+			],
+			"sourcePaths": [
+				"test/ddbctest"
+			],
+			"targetName": "ddbc-tests",
+			"targetPath": "test",
+			"targetType": "executable",
+			"versions": [
+				"USE_SQLITE"
+			]
+		},
+		{
+			"copyFiles-windows-x86": [
+				"libs/win32/sqlite3.dll"
+			],
+			"excludedSourceFiles-windows-x86-dmd": [],
+			"mainSourceFile": "test/ddbctest/main.d",
+			"name": "test-omf",
+			"platforms": [
+				"windows-x86-dmd"
+			],
+			"sourceFiles-windows-x86-dmd": [
+				"libs/win32/sqlite3.lib"
+			],
+			"sourcePaths": [
+				"test/ddbctest"
+			],
+			"targetName": "ddbc-tests",
+			"targetPath": "test",
+			"targetType": "executable",
+			"versions": [
+				"USE_SQLITE"
+			]
+		}
+	],
+	"description": "DB Connector for D language, similar to JDBC (mysql, sqlite, postgresql, odbc)",
+	"homepage": "https://github.com/buggins/ddbc",
+	"importPaths": [
+		"source/"
+	],
+	"license": "BSL-1.0",
+	"name": "ddbc",
+	"sourcePaths": [
+		"source/"
+	],
+	"systemDependencies": "Depending on configuration: PostgreSQL and/or SQLite v3",
+	"targetPath": "lib",
+	"targetType": "staticLibrary",
+	"toolchainRequirements": {
+		"dub": ">=1.14.0",
+		"frontend": ">=2.86.0"
+	},
+	"version": "0.5.4"
+}

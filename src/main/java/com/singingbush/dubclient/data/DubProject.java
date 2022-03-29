@@ -16,10 +16,10 @@ public class DubProject extends DubPackage {
     // targetPath
     private String workingDirectory;
     // subConfiguration
-    private String[] buildRequirements;
-    private String[] buildOptions;
-    private String[] libs;
-    private String[] sourceFiles;
+    private List<String> buildRequirements;
+//    private List<String> buildOptions;
+//    private List<String> libs;
+//    private List<String> sourceFiles;
     private Map<String,Object> dependencies = new TreeMap<>(); // sometimes it's "name":"123.0" whilst others it's "name":{"version":"123.0","optional":true}
     private List<DubPackage> subPackages = new ArrayList<>();
     private List<DubProject> configurations = new ArrayList<>();
@@ -86,6 +86,14 @@ public class DubProject extends DubPackage {
 
     public void setVersions(List<String> versions) {
         this.versions = versions;
+    }
+
+    public List<String> getBuildRequirements() {
+        return buildRequirements;
+    }
+
+    public void setBuildRequirements(List<String> buildRequirements) {
+        this.buildRequirements = buildRequirements;
     }
 
     public Map<String,Object> getDependencies() {

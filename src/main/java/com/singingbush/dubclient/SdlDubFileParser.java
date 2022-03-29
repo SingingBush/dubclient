@@ -38,6 +38,15 @@ class SdlDubFileParser implements DubFileParser {
                 case "name":
                     project.setName((String) t.getValue());
                     break;
+                case "targetType":
+                    project.setTargetType((String) t.getValue());
+                    break;
+                case "importPaths":
+                    project.setImportPaths(Arrays.asList((String)t.getValue()));
+                    break;
+                case "sourcePaths":
+                    project.setSourcePaths(Arrays.asList((String)t.getValue()));
+                    break;
                 case "description":
                     project.setDescription((String) t.getValue());
                     break;
@@ -52,6 +61,12 @@ class SdlDubFileParser implements DubFileParser {
                     break;
                 case "license":
                     project.setLicense((String) t.getValue());
+                    break;
+                case "buildRequirements":
+                    project.setBuildRequirements(Arrays.asList((String)t.getValue()));
+                    break;
+                case "toolchainRequirements":
+                    // todo: project.setToolchainRequirements();
                     break;
                 case "dependency":
                     project.addDependency((String) t.getValue(), (String) t.getAttribute("version"));
