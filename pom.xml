@@ -285,7 +285,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <failOnMissing>false</failOnMissing>
+                    <failOnMissing>true</failOnMissing>
                     <excludedLicenses>GPLv2|GPLv3</excludedLicenses>
                     <failOnBlacklist>true</failOnBlacklist>
                     <licenseMerges>
@@ -324,13 +324,8 @@
                     </licenseMerges>
                     <includedLicenses>
                         <includedLicense>Apache License, Version 2.0</includedLicense>
-                        <includedLicense>BSD 3-Clause License</includedLicense>
                         <includedLicense>The MIT License</includedLicense>
-                        <includedLicense>GPLv2 + Classpath Exception</includedLicense>
                         <includedLicense>LGPLv2.1</includedLicense>
-                        <includedLicense>CDDL + GPLv2 with classpath exception</includedLicense>
-                        <includedLicense>Public Domain</includedLicense>
-                        <includedLicense>Eclipse Public License 1.0</includedLicense>
                         <includedLicense>Eclipse Public License 2.0</includedLicense>
                     </includedLicenses>
                 </configuration>
