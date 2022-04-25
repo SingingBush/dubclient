@@ -22,6 +22,8 @@ public interface DubClient {
     /**
      * Parses a dub.json or dub.sdl file into a Java pojo.
      * @param dubFile a dub.json or dub.sdl file
+     * @return a dub project
+     * @throws FileNotFoundException if the dubFile arg is invalid
      * @since 0.3.0
      * @apiNote this is experimental and could be lacking numerous fields
      */
@@ -30,6 +32,7 @@ public interface DubClient {
     /**
      * Processes a dub.json file and outputs the same as the native dub tool would.
      * @param reader a Reader for the content of a dub.json file
+     * @return a dub project
      * @since 0.3.0
      * @apiNote this is experimental and could be lacking numerous fields
      */
@@ -38,6 +41,7 @@ public interface DubClient {
     /**
      * Processes a dub.sdl file and outputs the same as the native dub tool would.
      * @param reader a Reader for the content of a dub.sdl file
+     * @return a dub project
      * @since 0.3.0
      * @apiNote this is experimental and could be lacking numerous fields
      */

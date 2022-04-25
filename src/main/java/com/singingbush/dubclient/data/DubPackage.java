@@ -41,7 +41,8 @@ public class DubPackage {
      * "sourceLibrary"	This target type does not generate a binary, but rather forces dub to add all source files directly to the same compiler invocation as the dependent project.
      * "staticLibrary"	Forces output as a static library container.
      * "dynamicLibrary"	Forces output as a dynamic/shared library.
-     * @param targetType
+     *
+     * @param targetType Should be one of the options documented above. Typically "executable" or "library"
      */
     public void setTargetType(String targetType) {
         this.targetType = targetType;
