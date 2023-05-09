@@ -26,7 +26,7 @@ Stand-alone library to provide convenient access to the REST API of a dub reposi
 <dependency>
     <groupId>com.singingbush</groupId>
     <artifactId>dub-client</artifactId>
-    <version>0.2.3</version>
+    <version>0.3.0</version>
 </dependency>
 ```
 
