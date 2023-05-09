@@ -20,6 +20,15 @@ Stand-alone library to provide convenient access to the REST API of a dub reposi
 
 `https://code.dlang.org/api/packages/{package}/latest`
 
+## Adding the dependency to your project
+
+```xml
+<dependency>
+    <groupId>com.singingbush</groupId>
+    <artifactId>dub-client</artifactId>
+    <version>0.2.3</version>
+</dependency>
+```
 
 The API for the dub registry can be found [here](https://github.com/dlang/dub-registry/blob/master/source/dubregistry/api.d):
 
