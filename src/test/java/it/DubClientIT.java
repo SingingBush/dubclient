@@ -248,17 +248,17 @@ public class DubClientIT {
     @DisplayName("call dlang.org for package version info")
     @Timeout(value = 800L, unit = TimeUnit.MILLISECONDS)
     public void testPackageVersionInfo() throws DubRepositoryException {
-        final VersionInfo info = client.packageInfo("ddbc", "0.2.4");
+        final VersionInfo info = client.packageInfo("ddbc", "0.5.9");
 
         assertNotNull(info);
         assertAllGettersNotNull(info);
-        assertEquals("0.2.4", info.getVersion());
+        assertEquals("0.5.9", info.getVersion());
         assertFalse(info.getReadme().isEmpty());
         assertNotNull(info.getReadmeMarkdown());
         assertFalse(info.getCommitID().isEmpty());
         assertNotNull(info.getDate());
-        assertEquals(OffsetDateTime.of(2013, 4, 17, 9, 38, 57, 0, ZoneOffset.UTC).toZonedDateTime(), info.getDate());
-        assertEquals(ZonedDateTime.parse("2013-04-17T09:38:57Z"), info.getDate());
+        assertEquals(OffsetDateTime.of(2023, 10, 23, 14, 27, 36, 0, ZoneOffset.UTC).toZonedDateTime(), info.getDate());
+        assertEquals(ZonedDateTime.parse("2023-10-23T14:27:36Z"), info.getDate());
 
         assertAllGettersNotNull(info.getInfo());
     }
