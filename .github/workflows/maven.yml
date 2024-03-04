@@ -34,7 +34,9 @@ jobs:
         run: mvn -B package --file pom.xml
 
       - name: Maven Verify
-        run: mvn verify
+        run: mvn verify -DnvdApiKey=$NVD_API_KEY
+        env:
+          NVD_API_KEY: ${{ secrets.NVD_API_KEY }} # Needed so that dependency check can pass
 
       - name: Sonar
         if: ${{ matrix.jdk == '17' }}
