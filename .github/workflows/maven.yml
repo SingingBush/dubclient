@@ -1,6 +1,11 @@
 name: Java CI
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [opened, synchronize, reopened]
 
 jobs:
   build:
@@ -15,6 +20,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
 
       - name: Set up JDK ${{ matrix.jdk }}
         uses: actions/setup-java@v4
@@ -23,8 +30,15 @@ jobs:
           java-version: ${{ matrix.jdk }}
           cache: 'maven'
 
-      - name: Build with Maven
+      - name: Maven Package
         run: mvn -B package --file pom.xml
 
-      - name: Test with Maven
+      - name: Maven Verify
         run: mvn verify
+
+      - name: Sonar
+        if: ${{ matrix.jdk == '17' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Needed to get PR information, if any
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=dubclient
