@@ -68,7 +68,7 @@
         <sonar.exclusions>src/test/**</sonar.exclusions>
 
         <slf4j.version>2.0.12</slf4j.version>
-        <junit.version>5.10.2</junit.version>
+        <junit.version>5.10.3</junit.version>
     </properties>
 
     <dependencies>
