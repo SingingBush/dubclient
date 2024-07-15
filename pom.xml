@@ -196,6 +196,9 @@
                     <groupId>org.owasp</groupId>
                     <artifactId>dependency-check-maven</artifactId>
                     <version>10.0.2</version>
+                    <configuration>
+                        <nvdApiKeyEnvironmentVariable>NVD_API_KEY</nvdApiKeyEnvironmentVariable>
+                    </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -277,9 +280,7 @@
                             <goal>check</goal>
                         </goals>
                         <configuration>
-                            <nvdApiKey>${env.NVD_API_KEY}</nvdApiKey>
-                            <failBuildOnCVSS>10</failBuildOnCVSS>
-                            <skipTestScope>true</skipTestScope>
+                            <failBuildOnCVSS>9</failBuildOnCVSS>
                         </configuration>
                     </execution>
                 </executions>
