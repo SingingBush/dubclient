@@ -178,9 +178,12 @@
                     <version>0.8.12</version>
                 </plugin>
                 <plugin>
-                    <groupId>org.eluder.coveralls</groupId>
+                    <groupId>com.github.hazendaz.maven</groupId>
                     <artifactId>coveralls-maven-plugin</artifactId>
-                    <version>4.3.0</version>
+                    <version>4.5.0-M4</version>
+                    <configuration>
+                        <repoToken>${env.COVERALLS_REPO_TOKEN}</repoToken>
+                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -239,13 +242,13 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>org.eluder.coveralls</groupId>
+                <groupId>com.github.hazendaz.maven</groupId>
                 <artifactId>coveralls-maven-plugin</artifactId>
-                <!--<configuration>-->
-                <!--<repoToken> HANDLED BY TRAVIS ENVIRONMENT VARIABLE </repoToken>-->
-                <!--</configuration>-->
+                <version>4.5.0-M4</version>
+                <configuration>
+                    <repoToken>${env.COVERALLS_REPO_TOKEN}</repoToken>
+                </configuration>
             </plugin>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>

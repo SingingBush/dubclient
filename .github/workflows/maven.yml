@@ -10,18 +10,14 @@ on:
 jobs:
   build:
     name: Test with Java ${{ matrix.jdk }}
-    #runs-on: ${{ matrix.os }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         jdk: ['8', '11', '17', '21', '22']
-        #os: [ubuntu-latest, windows-latest, macOS-latest]
 
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
 
       - name: Set up JDK ${{ matrix.jdk }}
         uses: actions/setup-java@v4
@@ -30,24 +26,55 @@ jobs:
           java-version: ${{ matrix.jdk }}
           cache: 'maven'
 
-      - name: Maven Package
-        run: mvn -B package --file pom.xml
-
       - name: Maven Verify
         run: mvn verify -Ddependency-check.skip=true
         env:
           NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
 
-      # Only doing on one job due to NVD throttling API calls
+  analysis:
+    name: Static Analysis
+    needs: build
+    continue-on-error: false
+    if: ${{ needs.build.result == 'success' && github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # for actions/checkout to fetch code
+      pull-requests: write # for attached results to PR
+      checks: write
+      security-events: write # for github/codeql-action/upload-sarif to upload SARIF results
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: corretto
+          java-version: 17
+          cache: maven
+
+      - name: Setup Cache for SonarCloud packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+
+      - name: Maven Verify (coverage)
+        run: mvn verify jacoco:report coveralls:report -Ddependency-check.skip=true
+        env:
+          NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
+          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
+
       - name: Dependency Check
-        if: ${{ matrix.jdk == '17' }}
         run: mvn dependency-check:check
         env:
           NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
 
       - name: Sonar
-        if: ${{ matrix.jdk == '17' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=dubclient
+        run: mvn -B org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=dubclient
