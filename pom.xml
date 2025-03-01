@@ -68,7 +68,7 @@
         <sonar.exclusions>src/test/**</sonar.exclusions>
         <sonar.coverage.jacoco.xmlReportPaths>${project.reporting.outputDirectory}/jacoco-merged-report/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
 
-        <slf4j.version>2.0.16</slf4j.version>
+        <slf4j.version>2.0.17</slf4j.version>
         <junit.version>5.11.4</junit.version>
     </properties>
 
