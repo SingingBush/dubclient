@@ -69,7 +69,7 @@
         <sonar.coverage.jacoco.xmlReportPaths>${project.reporting.outputDirectory}/jacoco-merged-report/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
 
         <slf4j.version>2.0.17</slf4j.version>
-        <junit.version>5.13.2</junit.version>
+        <junit.version>5.13.4</junit.version>
     </properties>
 
     <dependencies>
@@ -87,16 +87,16 @@
         </dependency>
 
         <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-            <version>4.5.14</version>
+            <groupId>org.apache.httpcomponents.client5</groupId>
+            <artifactId>httpclient5</artifactId>
+            <version>5.5</version>
             <scope>compile</scope>
         </dependency>
 
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
-            <version>2.12.1</version>
+            <version>2.13.1</version>
             <scope>compile</scope>
         </dependency>
 
@@ -130,7 +130,7 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>4.11.0</version>
+            <version>5.19.0</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -288,7 +288,6 @@
                             <dataFile>${project.build.directory}/jacoco-merge/jacoco-merged.exec</dataFile>
                             <rules>
                                 <rule>
-                                    <element>PACKAGE</element>
                                     <limits>
                                         <limit>
                                             <counter>CLASS</counter>
@@ -296,14 +295,14 @@
                                             <minimum>0.9</minimum>
                                         </limit>
                                         <limit>
-                                            <counter>CLASS</counter>
-                                            <value>MISSEDCOUNT</value>
-                                            <maximum>3</maximum>
-                                        </limit>
-                                        <limit>
                                             <counter>METHOD</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>0.5</minimum>
+                                            <minimum>0.6</minimum>
+                                        </limit>
+                                        <limit>
+                                            <counter>LINE</counter>
+                                            <value>COVEREDRATIO</value>
+                                            <minimum>0.4</minimum>
                                         </limit>
                                     </limits>
                                 </rule>

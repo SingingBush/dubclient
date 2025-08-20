@@ -4,13 +4,16 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.singingbush.dubclient.data.*;
-import org.apache.http.HttpEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.util.EntityUtils;
+import org.apache.hc.client5.http.classic.methods.HttpGet;
+import org.apache.hc.client5.http.classic.methods.HttpUriRequest;
+import org.apache.hc.client5.http.config.ConnectionConfig;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
+import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
+import org.apache.hc.client5.http.impl.io.BasicHttpClientConnectionManager;
+import org.apache.hc.core5.http.HttpEntity;
+import org.apache.hc.core5.http.ParseException;
+import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +22,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Reader;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
@@ -40,8 +43,14 @@ class DubClientImpl implements DubClient {
                          @NotNull String userAgent) {
         this.repositoryUrl = repositoryUrl;
 
+        final BasicHttpClientConnectionManager cm = new BasicHttpClientConnectionManager();
+        cm.setConnectionConfig(ConnectionConfig.custom()
+            .setConnectTimeout(timeout, TimeUnit.MILLISECONDS)
+            .setSocketTimeout((int) timeout, TimeUnit.MILLISECONDS)
+            .build());
+
         httpClient = HttpClientBuilder.create()
-            .setConnectionTimeToLive(timeout, TimeUnit.MILLISECONDS)
+            .setConnectionManager(cm)
             .setUserAgent(userAgent)
             .build();
 
@@ -131,11 +140,11 @@ class DubClientImpl implements DubClient {
     }
 
     private <T> T callApi(@NotNull final HttpUriRequest request, @NotNull final Class<T> clazz) throws DubRepositoryException {
-        log.info("making HTTP request to " + request.getURI());
+        log.info("making HTTP request to {}", request.getRequestUri());
 
         try (final CloseableHttpResponse response = httpClient.execute(request)) {
             if(response != null) {
-                final int status = response.getStatusLine().getStatusCode();
+                final int status = response.getCode();
                 final HttpEntity httpEntity = response.getEntity();
                 if(httpEntity != null) {
                     if(status == 200) {
@@ -157,8 +166,8 @@ class DubClientImpl implements DubClient {
 
     private <T> T parseResponse(@NotNull final HttpEntity entity, @NotNull final Class<T> clazz) throws IOException, DubRepositoryException {
         try {
-            return gson.fromJson(EntityUtils.toString(entity, Charset.forName("UTF-8")), clazz);
-        } catch (final JsonSyntaxException e) {
+            return gson.fromJson(EntityUtils.toString(entity, StandardCharsets.UTF_8), clazz);
+        } catch (final JsonSyntaxException | ParseException e) {
             log.error("unable to parse the json response from the dub repository", e);
             throw new DubRepositoryException("the json response was not as expected", e);
         }
