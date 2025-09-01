@@ -38,24 +38,26 @@ The API for the dub registry can be found [here](https://github.com/dlang/dub-re
 interface IPackages {
 @safe:
 
-	@method(HTTPMethod.GET)
-	SearchResult[] search(string q = "");
+    @method(HTTPMethod.GET)
+    SearchResult[] search(string q = "");
 
-	@path(":name/latest")
-	string getLatestVersion(string _name);
+    @path(":name/latest")
+    string getLatestVersion(string _name);
 
-	@path(":name/stats")
-	DbPackageStats getStats(string _name);
+    @path(":name/stats")
+    DbPackageStats getStats(string _name);
 
-	@path(":name/:version/stats")
-	DownloadStats getStats(string _name, string _version);
+    @path(":name/:version/stats")
+    DownloadStats getStats(string _name, string _version);
 
-	@path(":name/info")
-	Json getInfo(string _name);
+    @path(":name/info")
+    Json getInfo(string _name, bool minimize = false);
 
-	@path(":name/:version/info")
-	Json getInfo(string _name, string _version);
+    @path(":name/:version/info")
+    Json getInfo(string _name, string _version, bool minimize = false);
+
+    Json[string] getInfos(string[] packages, bool include_dependencies = false, bool minimize = false);
 }
 ```
 
-This package requires _Apache HTTP Client v4.5.*_, _Gson v2.8_, and uses _slf4j-api_ for logging. It's intended for use in the [Intellij-DUB](https://github.com/intellij-dlanguage/intellij-dub) plugin but may also be helpful to other projects.
+This package requires _Apache HTTP Client v5.5.*_, _Gson v2.13_, and uses _slf4j-api_ for logging. It's intended for use in the [Intellij-DUB](https://github.com/intellij-dlanguage/intellij-dub) plugin but may also be helpful to other projects.
