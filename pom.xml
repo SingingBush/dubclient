@@ -181,7 +181,7 @@
                 <plugin>
                     <groupId>com.github.hazendaz.maven</groupId>
                     <artifactId>coveralls-maven-plugin</artifactId>
-                    <version>4.5.0</version>
+                    <version>4.7.0</version>
                     <configuration>
                         <repoToken>${env.COVERALLS_REPO_TOKEN}</repoToken>
                     </configuration>
@@ -315,7 +315,7 @@
             <plugin>
                 <groupId>com.github.hazendaz.maven</groupId>
                 <artifactId>coveralls-maven-plugin</artifactId>
-                <version>4.5.0-M4</version>
+                <version>4.7.0</version>
                 <configuration>
                     <jacocoReports>${project.reporting.outputDirectory}/jacoco-merged-report/jacoco.xml</jacocoReports>
                     <repoToken>${env.COVERALLS_REPO_TOKEN}</repoToken>
