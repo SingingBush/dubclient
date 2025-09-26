@@ -179,14 +179,6 @@
                     <version>0.8.13</version>
                 </plugin>
                 <plugin>
-                    <groupId>com.github.hazendaz.maven</groupId>
-                    <artifactId>coveralls-maven-plugin</artifactId>
-                    <version>4.7.0</version>
-                    <configuration>
-                        <repoToken>${env.COVERALLS_REPO_TOKEN}</repoToken>
-                    </configuration>
-                </plugin>
-                <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-gpg-plugin</artifactId>
                     <version>3.2.8</version>
@@ -312,15 +304,6 @@
                 </executions>
             </plugin>
 
-            <plugin>
-                <groupId>com.github.hazendaz.maven</groupId>
-                <artifactId>coveralls-maven-plugin</artifactId>
-                <version>4.5.0-M4</version>
-                <configuration>
-                    <jacocoReports>${project.reporting.outputDirectory}/jacoco-merged-report/jacoco.xml</jacocoReports>
-                    <repoToken>${env.COVERALLS_REPO_TOKEN}</repoToken>
-                </configuration>
-            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
@@ -496,6 +479,25 @@
                                 </configuration>
                             </execution>
                         </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>requires-jdk17</id>
+            <activation>
+                <jdk>17</jdk>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.github.hazendaz.maven</groupId>
+                        <artifactId>coveralls-maven-plugin</artifactId>
+                        <version>4.7.0</version>
+                        <configuration>
+                            <jacocoReports>${project.reporting.outputDirectory}/jacoco-merged-report/jacoco.xml</jacocoReports>
+                            <repoToken>${env.COVERALLS_REPO_TOKEN}</repoToken>
+                        </configuration>
                     </plugin>
                 </plugins>
             </build>
