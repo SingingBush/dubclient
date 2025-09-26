@@ -1,19 +1,15 @@
 package it;
 
+import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
 import com.singingbush.dubclient.DubClient;
 import com.singingbush.dubclient.DubRepositoryException;
 import com.singingbush.dubclient.data.*;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Timeout;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -22,12 +18,14 @@ import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 import static it.ReflectionTestUtils.Assert.assertAllGettersNotNull;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * These tests makes real HTTP calls to https://code.dlang.org API to ensure the code
- * works with the current REST API
+ * Some of these tests use Wiremock with examples of real HTTP responses from the <a href="https://code.dlang.org">code.dlang.org</a> API.
+ * From time to time the json should get updated to ensure it's inline with current state of the main dub server.
  *
  * @author Samael Bate (singingbush)
  * created on 16/06/18
@@ -35,10 +33,28 @@ import static org.junit.jupiter.api.Assertions.*;
 public class DubClientIT {
 
     private DubClient client;
+    private static final String HOSTNAME = "localhost";
+
+    @RegisterExtension
+    static WireMockExtension wiremock = WireMockExtension.newInstance()
+        .options(wireMockConfig()
+            .dynamicPort()
+            .dynamicHttpsPort()
+        )
+        .build();
 
     @BeforeEach
-    public void setUp() throws Exception {
-        client = DubClient.builder().build();
+    public void setUp() {
+        this.client = DubClient.builder()
+            .withScheme("http")
+            .withHostname(HOSTNAME)
+            .withPort(wiremock.getPort())
+            .build();
+    }
+
+    @AfterEach
+    public void tearDown() {
+        this.client = null;
     }
 
     @ParameterizedTest
@@ -167,29 +183,51 @@ public class DubClientIT {
     }
 
     @Test
-    @DisplayName("call dlang.org for latest dependency version")
-    @Timeout(value = 900L, unit = TimeUnit.MILLISECONDS)
-    public void testCallToCodeDlangOrg() throws DubRepositoryException {
-        final String dunit = client.latestVersion("d-unit");
-        assertTrue(dunit.split("\\.").length > 1);
+    @DisplayName("get latest version of a dependency and strip surrounding double-quotes")
+    public void testGetLatestVersion() throws DubRepositoryException {
+        wiremock.stubFor(get(urlPathEqualTo("/api/packages/d-unit/latest"))
+            .withHeader("Accept", equalTo("application/json"))
+            .withHost(equalTo(HOSTNAME))
+            .willReturn(
+                ok("\"0.10.2\"")
+                    .withHeader("Content-Type", "application/json")
+            ));
 
-        client.latestVersion("dunit");
+        final String result = client.latestVersion("d-unit");
+        assertEquals("0.10.2", result);
     }
 
     @Test
-    @DisplayName("call dlang.org for search")
-    @Timeout(value = 700L, unit = TimeUnit.MILLISECONDS)
-    public void testSearch() throws DubRepositoryException {
+    @DisplayName("get search results for querying 'unit'")
+    public void testSearch() throws DubRepositoryException, URISyntaxException, IOException {
+        final String searchResults = Files.readString(Paths.get(this.getClass().getClassLoader().getResource("search-results.json").toURI()));
+
+        wiremock.stubFor(get(urlPathEqualTo("/api/packages/search")).withQueryParam("q", equalTo("unit"))
+            .withHost(equalTo(HOSTNAME))
+            .willReturn(
+                ok(searchResults)
+                    .withHeader("Content-Type", "application/json")
+            ));
+
         final Stream<SearchResult> results = client.search("unit");
 
         assertTrue(results.allMatch(sr -> !sr.getName().isEmpty() && !sr.getDescription().isEmpty() && !sr.getVersion().isEmpty()));
     }
 
     @Test
-    @DisplayName("call dlang.org for package info")
-    @Timeout(value = 1200L, unit = TimeUnit.MILLISECONDS)
-    public void testPackageInfo() throws DubRepositoryException {
-        final PackageInfo info = client.packageInfo("vibe-d");
+    @DisplayName("get info for a package")
+    public void testPackageInfo() throws DubRepositoryException, URISyntaxException, IOException {
+        final String infoResponse = Files.readString(Paths.get(this.getClass().getClassLoader().getResource("info-response.json").toURI()));
+        final String packageName = "vibe-d";
+
+        wiremock.stubFor(get(urlPathEqualTo(String.format("/api/packages/%s/info", packageName)))
+            .withHost(equalTo(HOSTNAME))
+            .willReturn(
+                ok(infoResponse)
+                    .withHeader("Content-Type", "application/json")
+            ));
+
+        final PackageInfo info = client.packageInfo(packageName);
 
         assertNotNull(info);
 
@@ -215,46 +253,26 @@ public class DubClientIT {
     }
 
     @Test
-    @DisplayName("call dlang.org for package info (gitlab)")
-    @Timeout(value = 800L, unit = TimeUnit.MILLISECONDS)
-    public void testPackageInfoGitlab() throws DubRepositoryException {
-        // ensure projects on Gitlab don't have any weird quirks
-        final PackageInfo info = client.packageInfo("ggplotd-cli");
+    @DisplayName("get info for a specific version of a package")
+    public void testPackageVersionInfo() throws DubRepositoryException, URISyntaxException, IOException {
+        final String infoResponse = Files.readString(Paths.get(this.getClass().getClassLoader().getResource("version-info.json").toURI()));
+        final String packageName = "ddbc";
+        final String packageVersion = "0.5.9";
 
-        assertNotNull(info);
-        assertAllGettersNotNull(info);
-        assertAllGettersNotNull(info.getRepository());
-        info.getVersions().parallelStream()
-            .forEach(v -> {
-                assertNotNull(v.getName(),"Version should have Name");
-                assertNotNull(v.getDescription(),"Version should have Description");
-                assertNotNull(v.getVersion(),"Version should have Version Number");
-                assertNotNull(v.getDate(),"Version should have Date");
-                assertNotNull(v.getAuthors(), "Version should have Authors");
-                //assertNotNull(v.getHomepage(), "Version should have Homepage");
-                assertNotNull(v.getCopyright(), "Version should have Copyright");
-                assertNotNull(v.getLicense(), "Version should have License");
-                assertNotNull(v.getReadme(), "Version should have Readme");
-                assertNotNull(v.getPackageDescriptionFile(), "Version should have Package Description File");
-            });
+        wiremock.stubFor(get(urlPathEqualTo(String.format("/api/packages/%s/%s/info", packageName, packageVersion)))
+            .withHost(equalTo(HOSTNAME))
+            .willReturn(
+                ok(infoResponse)
+                    .withHeader("Content-Type", "application/json")
+            ));
 
-        assertEquals("ggplotd-cli", info.getName());
-
-        assertEquals(OffsetDateTime.of(2021, 4, 8, 6, 32, 59, 0, ZoneOffset.UTC).toZonedDateTime(), info.getDateAdded());
-        assertEquals(ZonedDateTime.parse("2021-04-08T06:32:59Z"), info.getDateAdded());
-    }
-
-    @Test
-    @DisplayName("call dlang.org for package version info")
-    @Timeout(value = 800L, unit = TimeUnit.MILLISECONDS)
-    public void testPackageVersionInfo() throws DubRepositoryException {
-        final VersionInfo info = client.packageInfo("ddbc", "0.5.9");
+        final VersionInfo info = client.packageInfo(packageName, packageVersion);
 
         assertNotNull(info);
         assertAllGettersNotNull(info);
         assertEquals("0.5.9", info.getVersion());
-        assertFalse(info.getReadme().isEmpty());
-        assertNotNull(info.getReadmeMarkdown());
+        assertEquals("blah", info.getReadme());
+        assertTrue(info.getReadmeMarkdown());
         assertFalse(info.getCommitID().isEmpty());
         assertNotNull(info.getDate());
         assertEquals(OffsetDateTime.of(2023, 10, 23, 14, 27, 36, 0, ZoneOffset.UTC).toZonedDateTime(), info.getDate());
@@ -264,43 +282,94 @@ public class DubClientIT {
     }
 
     @Test
-    @DisplayName("call dlang.org for package stats")
-    @Timeout(value = 700L, unit = TimeUnit.MILLISECONDS)
-    public void testPackageStats() throws DubRepositoryException {
-        final PackageStats stats = client.packageStats("vibe-d");
+    @DisplayName("get stats for a package")
+    public void testPackageStats() throws DubRepositoryException, URISyntaxException, IOException {
+        final String statsResponse = Files.readString(Paths.get(this.getClass().getClassLoader().getResource("stats-response.json").toURI()));
+
+        final String packageName = "vibe-d";
+        wiremock.stubFor(get(urlPathEqualTo(String.format("/api/packages/%s/stats", packageName)))
+            .withHost(equalTo(HOSTNAME))
+            .willReturn(
+                ok(statsResponse)
+                    .withHeader("Content-Type", "application/json")
+            ));
+
+        final PackageStats stats = client.packageStats(packageName);
 
         assertNotNull(stats.getUpdatedAt());
 
         final DownloadStats downloads = stats.getDownloads();
         assertNotNull(downloads);
         assertAllGettersNotNull(downloads);
-        assertTrue(downloads.getTotal() > 240_343);
-        assertNotNull(downloads.getMonthly());
-        assertNotNull(downloads.getWeekly());
-        assertNotNull(downloads.getDaily());
+        assertEquals(Integer.valueOf(1_547_952), downloads.getTotal());
+        assertEquals(Integer.valueOf(26099), downloads.getMonthly());
+        assertEquals(Integer.valueOf(17969), downloads.getWeekly());
+        assertEquals(Integer.valueOf(3636), downloads.getDaily());
 
         final RepoStats repo = stats.getRepo();
         assertNotNull(repo);
         assertAllGettersNotNull(repo);
-        assertNotNull(repo.getStars());
-        assertNotNull(repo.getWatchers());
-        assertNotNull(repo.getForks());
-        assertNotNull(repo.getIssues());
+        assertEquals(Integer.valueOf(1190), repo.getStars());
+        assertEquals(Integer.valueOf(58), repo.getWatchers());
+        assertEquals(Integer.valueOf(281), repo.getForks());
+        assertEquals(Integer.valueOf(438), repo.getIssues());
 
         assertNotNull(stats.getScore());
     }
 
     @Test
-    @DisplayName("call dlang.org for package version stats")
-    @Timeout(value = 2200L, unit = TimeUnit.MILLISECONDS)
+    @DisplayName("get stats for a specific version of a package")
     public void testPackageVersionStats() throws DubRepositoryException {
-        final DownloadStats downloads = client.packageStats("vibe-d", "0.8.1");
+        final String packageName = "vibe-d";
+        final String version = "0.8.1";
+
+        wiremock.stubFor(get(urlPathEqualTo(String.format("/api/packages/%s/%s/stats", packageName, version)))
+            .withHost(equalTo(HOSTNAME))
+            .willReturn(
+                ok("{\n" +
+                    "downloads: {\n" +
+                    "total: 26300,\n" +
+                    "monthly: 0,\n" +
+                    "weekly: 0,\n" +
+                    "daily: 0\n" +
+                    "}\n" +
+                    "}")
+                    .withHeader("Content-Type", "application/json")
+            ));
+
+        final DownloadStats downloads = client.packageStats(packageName, version);
 
         assertNotNull(downloads);
         assertAllGettersNotNull(downloads);
-        assertTrue(downloads.getTotal() > 26_000);
-        assertNotNull(downloads.getMonthly());
-        assertNotNull(downloads.getWeekly());
-        assertNotNull(downloads.getDaily());
+        assertEquals(Integer.valueOf(26_300), downloads.getTotal());
+        assertEquals(Integer.valueOf(0), downloads.getMonthly());
+        assertEquals(Integer.valueOf(0), downloads.getWeekly());
+        assertEquals(Integer.valueOf(0), downloads.getDaily());
+    }
+
+    @Test
+    @DisplayName("handle 404 response from dlang.org for non-existing package")
+    public void testHandling404() {
+        wiremock.stubFor(get(urlPathEqualTo("/api/packages/GARBAGE/info"))
+            .withHost(equalTo(HOSTNAME))
+            .willReturn(
+                notFound()
+                    .withBody("{\"statusMessage\":\"Package not found\"}")
+                    .withHeader("Content-Type", "application/json")
+            ));
+
+        assertThrows(DubRepositoryException.class, () -> client.packageInfo("GARBAGE"));
+    }
+
+    @Test
+    @DisplayName("handle 500 response from dlang.org")
+    public void testHandlingServerError() {
+        wiremock.stubFor(get(urlPathEqualTo("/api/packages/anything/info"))
+            .withHost(equalTo(HOSTNAME))
+            .willReturn(
+                serverError()
+            ));
+
+        assertThrows(DubRepositoryException.class, () -> client.packageInfo("anything"));
     }
 }

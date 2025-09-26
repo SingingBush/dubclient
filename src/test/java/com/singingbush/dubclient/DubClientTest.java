@@ -2,11 +2,6 @@ package com.singingbush.dubclient;
 
 import com.singingbush.dubclient.data.SearchResult;
 import it.ReflectionTestUtils;
-import org.apache.hc.client5.http.ClientProtocolException;
-import org.apache.hc.client5.http.classic.methods.HttpGet;
-import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
-import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
-import org.apache.hc.core5.http.HttpEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,6 +11,10 @@ import org.mockito.MockitoAnnotations;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -32,22 +31,25 @@ public class DubClientTest {
     private DubClient client;
 
     @Mock
-    private CloseableHttpClient httpClient;
+    private HttpClient httpClient;
 
     @BeforeEach
     public void setUp() throws Exception {
         MockitoAnnotations.openMocks(this);
-        client = DubClient.builder().withUrl("http://localhost").build();
+        client = DubClient.builder()
+            .withScheme("http")
+            .withHostname("localhost")
+            .build();
 
         ReflectionTestUtils.setField(client, "httpClient", httpClient);
     }
 
     @DisplayName("Successful Search")
     @Test
-    public void testSearch() throws DubRepositoryException, IOException {
+    public void testSearch() throws DubRepositoryException, IOException, InterruptedException {
         final InputStream json = this.getClass().getClassLoader().getResourceAsStream("search-results.json");
-        final CloseableHttpResponse response = mockResponse(200, json);
-        when(httpClient.execute(any(HttpGet.class))).thenReturn(response);
+        final HttpResponse<Object> response = mockResponse(200, new String(json.readAllBytes(), StandardCharsets.UTF_8));
+        when(httpClient.send(any(HttpRequest.class), any())).thenReturn(response);
 
         final Stream<SearchResult> stream = client.search("test");
 
@@ -57,34 +59,34 @@ public class DubClientTest {
 
     @DisplayName("Search Handles Unexpected ResponseBody")
     @Test
-    public void testSearchHandlesUnexpectedResponseBody() throws IOException {
+    public void testSearchHandlesUnexpectedResponseBody() throws IOException, InterruptedException {
         final InputStream json = new ByteArrayInputStream("something other than json".getBytes());
-        final CloseableHttpResponse response = mockResponse(200, json);
-        when(httpClient.execute(any(HttpGet.class))).thenReturn(response);
+        final HttpResponse<Object> response = mockResponse(200, new String(json.readAllBytes(), StandardCharsets.UTF_8));
+        when(httpClient.send(any(HttpRequest.class), any())).thenReturn(response);
 
         assertThrows(DubRepositoryException.class, () -> client.search("test"));
     }
 
     @DisplayName("Search Handles 500 response")
     @Test
-    public void testSearchHandles500() throws IOException {
-        final CloseableHttpResponse response = mockResponse(500, null);
-        when(httpClient.execute(any(HttpGet.class))).thenReturn(response);
+    public void testSearchHandles500() throws IOException, InterruptedException {
+        final HttpResponse<Object> response = mockResponse(500, null);
+        when(httpClient.send(any(HttpRequest.class), any())).thenReturn(response);
 
         assertThrows(DubRepositoryException.class, () -> client.search("test"));
     }
 
     @DisplayName("Search Handles IOException")
     @Test
-    public void testSearchHandlesIOException() throws IOException {
-        when(httpClient.execute(any(HttpGet.class))).thenThrow(IOException.class);
+    public void testSearchHandlesIOException() throws IOException, InterruptedException {
+        when(httpClient.send(any(HttpRequest.class), any())).thenThrow(IOException.class);
         assertThrows(DubRepositoryException.class, () -> client.search("test"));
     }
 
     @DisplayName("Search Handles ClientProtocolException")
     @Test
-    public void testSearchHandlesClientProtocolException() throws IOException {
-        when(httpClient.execute(any(HttpGet.class))).thenThrow(ClientProtocolException.class);
+    public void testSearchHandlesClientProtocolException() throws IOException, InterruptedException {
+        when(httpClient.send(any(HttpRequest.class), any())).thenThrow(InterruptedException.class);
         assertThrows(DubRepositoryException.class, () -> client.search("test"));
     }
 
@@ -108,14 +110,13 @@ public class DubClientTest {
 //    public void latestVersion() {
 //    }
 
-    private CloseableHttpResponse mockResponse(final int status, final InputStream json) throws IOException {
-        final CloseableHttpResponse response = mock(CloseableHttpResponse.class);
-        when(response.getCode()).thenReturn(status);
+    private HttpResponse<Object> mockResponse(final int status, final String body) {
+        @SuppressWarnings("unchecked")
+        final HttpResponse<Object> response = mock(HttpResponse.class);
+        when(response.statusCode()).thenReturn(status);
 
-        if(json != null) {
-            final HttpEntity entity = mock(HttpEntity.class);
-            when(entity.getContent()).thenReturn(json);
-            when(response.getEntity()).thenReturn(entity);
+        if(body != null) {
+            when(response.body()).thenReturn(body);
         }
 
         return response;

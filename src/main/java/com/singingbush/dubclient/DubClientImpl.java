@@ -4,27 +4,22 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.singingbush.dubclient.data.*;
-import org.apache.hc.client5.http.classic.methods.HttpGet;
-import org.apache.hc.client5.http.classic.methods.HttpUriRequest;
-import org.apache.hc.client5.http.config.ConnectionConfig;
-import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
-import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
-import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
-import org.apache.hc.client5.http.impl.io.BasicHttpClientConnectionManager;
-import org.apache.hc.core5.http.HttpEntity;
-import org.apache.hc.core5.http.ParseException;
-import org.apache.hc.core5.http.io.entity.EntityUtils;
+
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.Reader;
-import java.nio.charset.StandardCharsets;
-import java.util.concurrent.TimeUnit;
+import javax.net.ssl.SSLContext;
+import java.io.*;
+import java.net.*;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.time.Duration;
 import java.util.stream.Stream;
+
+import static java.time.temporal.ChronoUnit.MILLIS;
 
 /**
  * @author Samael Bate (singingbush)
@@ -34,26 +29,47 @@ class DubClientImpl implements DubClient {
 
     private static final Logger log = LoggerFactory.getLogger(DubClientImpl.class);
 
-    private final String repositoryUrl;
-    private final CloseableHttpClient httpClient;
+    private static final String APPLICATION_JSON_VALUE = "application/json";
+
+    private final String scheme;
+    private final String hostName;
+    private final int port;
     private final Gson gson;
 
-    DubClientImpl(@NotNull String repositoryUrl,
-                         long timeout,
-                         @NotNull String userAgent) {
-        this.repositoryUrl = repositoryUrl;
+    private final HttpClient httpClient;
+    final HttpRequest.Builder requestBuilder;
 
-        final BasicHttpClientConnectionManager cm = new BasicHttpClientConnectionManager();
-        cm.setConnectionConfig(ConnectionConfig.custom()
-            .setConnectTimeout(timeout, TimeUnit.MILLISECONDS)
-            .setSocketTimeout((int) timeout, TimeUnit.MILLISECONDS)
-            .build());
+    DubClientImpl(
+        @NotNull final String scheme,
+        @NotNull String hostName,
+        int port,
+        long timeout,
+        @NotNull String userAgent,
+        @Nullable final SSLContext sslContext
+    ) {
+        this.scheme = !scheme.isBlank() ? scheme : "https";
+        this.hostName = !hostName.isBlank() ? hostName : "code.dlang.org";
+        this.port = port;
 
-        httpClient = HttpClientBuilder.create()
-            .setConnectionManager(cm)
-            .setUserAgent(userAgent)
+        final HttpClient.Builder httpClientBuilder = HttpClient.newBuilder()
+            .version(HttpClient.Version.HTTP_1_1)
+            .followRedirects(HttpClient.Redirect.ALWAYS);
+
+        if(sslContext != null) {
+            httpClientBuilder.sslContext(sslContext);
+        }
+
+        this.httpClient = httpClientBuilder
             .build();
 
+        this.requestBuilder = HttpRequest.newBuilder()
+            .version(HttpClient.Version.HTTP_1_1)
+            .timeout(Duration.of(timeout, MILLIS))
+            .header("Content-Type", APPLICATION_JSON_VALUE)
+            .header("Accept", APPLICATION_JSON_VALUE)
+            .header("User-Agent", userAgent)
+        //.header("Accept-Language", "en-GB")
+        ;
         gson = new GsonBuilder().create();
     }
 
@@ -68,7 +84,7 @@ class DubClientImpl implements DubClient {
         try {
             return parser.parse(dubFile);
         } catch (final FileNotFoundException e) {
-            log.error(String.format("The file '%s' was not found", dubFile.getName()), e);
+            log.error("The file '{}' was not found", dubFile.getName(), e);
         }
         return null; // todo: don't return null, throw a custom exception
     }
@@ -89,94 +105,122 @@ class DubClientImpl implements DubClient {
     public Stream<SearchResult> search(@NotNull final String text) throws DubRepositoryException {
         if (text.isEmpty()) throw new IllegalArgumentException("Search text cannot be blank");
 
-        final HttpUriRequest request = new HttpGet(String.format("%s/api/packages/search?q=%s", repositoryUrl, text));
+        try {
+            final HttpRequest request = this.makeGetRequest("/api/packages/search", String.format("q=%s", text));
 
-        return Stream.of(callApi(request, SearchResult[].class));
+            return Stream.of(gson.fromJson(this.sendRequest(request, HttpResponse.BodyHandlers.ofString()), SearchResult[].class));
+        } catch (URISyntaxException | JsonSyntaxException e) {
+            log.error("There was a problem building the URI", e);
+            throw new DubRepositoryException("There was a problem building the URI", e);
+        }
     }
 
     @Override
     public PackageInfo packageInfo(@NotNull final String packageName) throws DubRepositoryException {
         if (packageName.isEmpty()) throw new IllegalArgumentException("Package Name cannot be blank");
 
-        final HttpUriRequest request = new HttpGet(String.format("%s/api/packages/%s/info", repositoryUrl, packageName));
+        try {
+            final HttpRequest request = this.makeGetRequest(String.format("/api/packages/%s/info", packageName), null);
 
-        return callApi(request, PackageInfo.class);
+            return gson.fromJson(sendRequest(request, HttpResponse.BodyHandlers.ofString()), PackageInfo.class);
+        } catch (URISyntaxException | JsonSyntaxException e) {
+            log.error("There was a problem building the URI", e);
+            throw new DubRepositoryException("There was a problem building the URI", e);
+        }
     }
 
     @Override
     public VersionInfo packageInfo(@NotNull final String packageName, @NotNull final String version) throws DubRepositoryException {
         if (packageName.isEmpty() || version.isEmpty()) throw new IllegalArgumentException("args cannot be blank");
 
-        final HttpUriRequest request = new HttpGet(String.format("%s/api/packages/%s/%s/info", repositoryUrl, packageName, version));
+        try {
+            final HttpRequest request = this.makeGetRequest(String.format("/api/packages/%s/%s/info", packageName, version), null);
 
-        return callApi(request, VersionInfo.class);
+            return gson.fromJson(sendRequest(request, HttpResponse.BodyHandlers.ofString()), VersionInfo.class);
+        } catch (URISyntaxException | JsonSyntaxException e) {
+            log.error("There was a problem building the URI", e);
+            throw new DubRepositoryException("There was a problem building the URI", e);
+        }
     }
 
     @Override
     public PackageStats packageStats(@NotNull final String packageName) throws DubRepositoryException {
         if (packageName.isEmpty()) throw new IllegalArgumentException("Package Name cannot be blank");
 
-        final HttpUriRequest request = new HttpGet(String.format("%s/api/packages/%s/stats", repositoryUrl, packageName));
+        try {
+            final HttpRequest request = this.makeGetRequest(String.format("/api/packages/%s/stats", packageName), null);
 
-        return callApi(request, PackageStats.class);
+            return gson.fromJson(sendRequest(request, HttpResponse.BodyHandlers.ofString()), PackageStats.class);
+        } catch (URISyntaxException | JsonSyntaxException e) {
+            log.error("There was a problem building the URI", e);
+            throw new DubRepositoryException("There was a problem building the URI", e);
+        }
     }
 
     @Override
     public DownloadStats packageStats(@NotNull final String packageName, @NotNull final String version) throws DubRepositoryException {
         if (packageName.isEmpty() || version.isEmpty()) throw new IllegalArgumentException("args cannot be blank");
 
-        final HttpUriRequest request = new HttpGet(String.format("%s/api/packages/%s/%s/stats", repositoryUrl, packageName, version));
+        try {
+            final HttpRequest request = this.makeGetRequest(String.format("/api/packages/%s/%s/stats", packageName, version), null);
 
-        return callApi(request, PackageStats.class).getDownloads();
+            return gson.fromJson(sendRequest(request, HttpResponse.BodyHandlers.ofString()), PackageStats.class).getDownloads();
+        } catch (URISyntaxException | JsonSyntaxException e) {
+            log.error("There was a problem building the URI", e);
+            throw new DubRepositoryException("There was a problem building the URI", e);
+        }
     }
 
     @Override
     public String latestVersion(@NotNull final String packageName) throws DubRepositoryException {
         if (packageName.isEmpty()) throw new IllegalArgumentException("Package Name cannot be blank");
 
-        final HttpUriRequest request = new HttpGet(String.format("%s/api/packages/%s/latest", repositoryUrl, packageName));
-
-        return callApi(request, String.class);
-    }
-
-    private <T> T callApi(@NotNull final HttpUriRequest request, @NotNull final Class<T> clazz) throws DubRepositoryException {
-        log.info("making HTTP request to {}", request.getRequestUri());
-
-        try (final CloseableHttpResponse response = httpClient.execute(request)) {
-            if(response != null) {
-                final int status = response.getCode();
-                final HttpEntity httpEntity = response.getEntity();
-                if(httpEntity != null) {
-                    if(status == 200) {
-                        return parseResponse(httpEntity, clazz);
-                    } else {
-                        log.warn(String.format("DUB repository returned %s", status));
-                        log.debug("Server status message: {}", parseResponse(httpEntity, ErrorMessage.class).getStatusMessage());
-                    }
-                }
-            } else {
-                log.warn("no response from DUB repository");
-            }
-        } catch (final IOException e) {
-            log.error(e.getMessage());
-        }
-
-        throw new DubRepositoryException("");
-    }
-
-    private <T> T parseResponse(@NotNull final HttpEntity entity, @NotNull final Class<T> clazz) throws IOException, DubRepositoryException {
         try {
-            return gson.fromJson(EntityUtils.toString(entity, StandardCharsets.UTF_8), clazz);
-        } catch (final JsonSyntaxException | ParseException e) {
-            log.error("unable to parse the json response from the dub repository", e);
-            throw new DubRepositoryException("the json response was not as expected", e);
+            final HttpRequest request = this.makeGetRequest(String.format("/api/packages/%s/latest", packageName), null);
+
+            return sendRequest(request, HttpResponse.BodyHandlers.ofString()).replaceAll("\"", "");
+        } catch (URISyntaxException | JsonSyntaxException e) {
+            log.error("There was a problem building the URI", e);
+            throw new DubRepositoryException("There was a problem building the URI", e);
+        }
+    }
+
+    private HttpRequest makeGetRequest(@NotNull final String path, @Nullable final String query) throws URISyntaxException {
+        return this.requestBuilder
+            .uri(
+                new URI(this.scheme, null, this.hostName, this.port, path, query, null)
+            )
+            .GET()
+            .build();
+    }
+
+    private <T> T sendRequest(final HttpRequest request, final HttpResponse.BodyHandler<T> handler) throws DubRepositoryException {
+        try {
+            final HttpResponse<T> response = this.httpClient.send(request, handler);
+            if(response.statusCode() == 200) {
+                final T body = response.body();
+                log.debug("Dub server responded with {}, body : {}", response.statusCode(), body);
+                return body;
+            } else {
+                final String msg = String.format("Dub server responded with %s, body : %s", response.statusCode(), response.body());
+                log.error(msg);
+
+                // todo: handle error response payloads
+//                if (response.body() != null) {
+//                    gson.fromJson(response.body(), ErrorMessage.class).getStatusMessage();
+//                }
+
+                throw new DubRepositoryException(msg);
+            }
+        } catch (IOException | InterruptedException e) {
+            throw new DubRepositoryException("Error calling "+this.hostName, e);
         }
     }
 
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("DubClientImpl{");
-        sb.append("repositoryUrl='").append(repositoryUrl).append('\'');
+        sb.append("hostName='").append(hostName).append('\'');
         sb.append(", httpClient=").append(httpClient);
         sb.append(", gson=").append(gson);
         sb.append('}');

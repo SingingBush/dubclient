@@ -1,0 +1,21 @@
+{
+    "readme": "blah",
+    "commitID":"92d342c019ca77c9c0a33032c3086fcd5459f0f0",
+    "version": "0.5.9",
+    "docFolder": "",
+    "readmeMarkdown": true,
+    "date": "2023-10-23T14:27:36Z",
+    "info": {
+        "packageDescriptionFile": "dub.json",
+        "authors": ["Some Person"],
+        "systemDependencies": "free text describing required system libs",
+        "buildRequirements": ["allowWarnings"],
+        "license": "BSL-1.0",
+        "targetPath": "lib",
+        "name": "ddbc",
+        "targetType": "staticLibrary",
+        "configurations": [],
+        "description": "",
+        "homepage": ""
+    }
+}

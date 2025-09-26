@@ -1,6 +1,7 @@
 module dub.client {
+    requires java.net.http;
+
     requires com.google.gson;
-    requires org.apache.httpcomponents.client5.httpclient5;
     requires org.slf4j;
     requires static org.jetbrains.annotations;
     requires sdlang; // 2.2.0 and above support JPMS
