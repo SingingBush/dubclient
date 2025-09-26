@@ -32,6 +32,25 @@ Stand-alone library to provide convenient access to the REST API of a dub reposi
 </dependency>
 ```
 
+## Example usage
+
+```Java
+DubClient client = DubClient.builder()
+            //.withScheme("https") optionally override to http is needed 
+            //.withHostname("code.dlang.org") optionally override if you host your own dub repo
+            //.withPort(443) optionally override if needed
+            .build();
+
+final PackageInfo info = client.packageInfo("vibe-d"); // for info about a dub package
+
+final Stream<SearchResult> results = client.search("unit"); // search dub repo
+
+// There are also functions for dealing with local dub files (dub.json or dub.sdl), such as:
+
+final DubProject project = client.parseProjectFile(Paths.get("dub.json").toFile());
+```
+
+
 The API for the dub registry can be found [here](https://github.com/dlang/dub-registry/blob/master/source/dubregistry/api.d):
 
 ```D
@@ -60,4 +79,4 @@ interface IPackages {
 }
 ```
 
-This package requires _Apache HTTP Client v5.5.*_, _Gson v2.13_, and uses _slf4j-api_ for logging. It's intended for use in the [Intellij-DUB](https://github.com/intellij-dlanguage/intellij-dub) plugin but may also be helpful to other projects.
+This package requires _Gson v2.13_, and uses _slf4j-api_ for logging. It's intended for use in the [Intellij-DUB](https://github.com/intellij-dlanguage/intellij-dub) plugin but may also be helpful to other projects.
