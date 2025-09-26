@@ -7,9 +7,10 @@ import com.singingbush.dubclient.data.DubProject;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 
 class JsonDubFileParser implements DubFileParser {
 
@@ -22,8 +23,8 @@ class JsonDubFileParser implements DubFileParser {
     }
 
     @Override
-    public DubProject parse(@NotNull final File dubFile) throws FileNotFoundException {
-        return parse(new FileReader(dubFile));
+    public DubProject parse(@NotNull final File dubFile) throws IOException {
+        return parse(new FileReader(dubFile, StandardCharsets.UTF_8));
     }
 
     @Override

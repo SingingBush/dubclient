@@ -83,8 +83,8 @@ class DubClientImpl implements DubClient {
 
         try {
             return parser.parse(dubFile);
-        } catch (final FileNotFoundException e) {
-            log.error("The file '{}' was not found", dubFile.getName(), e);
+        } catch (final IOException e) {
+            log.error("IO exception parsing '{}'", dubFile.getName(), e);
         }
         return null; // todo: don't return null, throw a custom exception
     }
