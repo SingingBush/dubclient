@@ -66,6 +66,7 @@
         <sonar.projectKey>dubclient</sonar.projectKey>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <sonar.exclusions>src/test/**</sonar.exclusions>
+        <sonar.coverage.exclusions>com/singingbush/dubclient/data/*</sonar.coverage.exclusions>
         <sonar.coverage.jacoco.xmlReportPaths>${project.reporting.outputDirectory}/jacoco-merged-report/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
 
         <slf4j.version>2.0.17</slf4j.version>
