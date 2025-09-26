@@ -237,6 +237,11 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>com/singingbush/dubclient/data/*</exclude>
+                    </excludes>
+                </configuration>
                 <executions>
                     <execution>
                         <id>prepare-agent</id>
@@ -263,7 +268,8 @@
                                 <fileSet>
                                     <directory>${project.build.directory}/</directory>
                                     <includes>
-                                        <include>*.exec</include>
+                                        <include>jacoco.exec</include>
+                                        <include>jacoco-it.exec</include>
                                     </includes>
                                 </fileSet>
                             </fileSets>
@@ -301,12 +307,12 @@
                                         <limit>
                                             <counter>METHOD</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>0.6</minimum>
+                                            <minimum>0.7</minimum>
                                         </limit>
                                         <limit>
                                             <counter>LINE</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>0.4</minimum>
+                                            <minimum>0.6</minimum>
                                         </limit>
                                     </limits>
                                 </rule>
