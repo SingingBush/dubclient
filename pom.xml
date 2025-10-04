@@ -65,8 +65,10 @@
         <sonar.organization>singingbush</sonar.organization>
         <sonar.projectKey>dubclient</sonar.projectKey>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+        <sonar.log.level>DEBUG</sonar.log.level>
         <sonar.exclusions>src/test/**</sonar.exclusions>
-        <sonar.coverage.exclusions>com/singingbush/dubclient/data/*</sonar.coverage.exclusions>
+        <sonar.coverage.exclusions>**/data/*</sonar.coverage.exclusions>
+        <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
         <sonar.coverage.jacoco.xmlReportPaths>${project.reporting.outputDirectory}/jacoco-merged-report/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
 
         <slf4j.version>2.0.17</slf4j.version>
@@ -157,7 +159,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>3.11.3</version>
+                    <version>3.12.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -351,7 +353,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>license-maven-plugin</artifactId>
-                <version>2.6.0</version>
+                <version>2.7.0</version>
                 <executions>
                     <execution>
                         <id>add-third-party</id>
@@ -533,6 +535,9 @@
             <activation>
                 <jdk>17</jdk>
             </activation>
+            <properties>
+                <junit.version>6.0.0</junit.version>
+            </properties>
             <build>
                 <plugins>
                     <plugin>
